@@ -21,17 +21,14 @@ public:
 	Shader(GLenum shaderTarget, const char* sourceFilename)
 		: ready{false}
 		, shaderTarget{shaderTarget}
-		//, shaderId{glCreateShader(shaderTarget)}
+		, shaderId{glCreateShader(shaderTarget)}
 	{
-		shaderId = glCreateShader(shaderTarget);
 
 		if (loadAndCompileShader(shaderTarget, sourceFilename)) {
 			ready = true;
-			printGLError("After shader ready: " + std::string{ sourceFilename });
 		}
 		else {
 			// Maybe all the bool thing is redundant if we're throwing in the end?
-			throw std::runtime_error{ "Error loading and/or compiling shader" };
 		}
 	}
 
@@ -120,10 +117,11 @@ public:
 	ShaderProgram(ShaderTargetFilenamePairs pairs)
 		: shaderProgramId{glCreateProgram()}
 	{
+
 		prepareShaders(pairs);
-		//printGLError("After ShaderProgram::prepareShaders");
+
+
 		prepareProgram();
-		destroyShaders();
 	}
 
 
@@ -142,25 +140,18 @@ private:
 	{
 		for (auto& pair : pairs) 
 		{
-			Shader shader{ pair.first, pair.second };
-			shaders.push_back(shader);
-
-			printGLError("Inside shader preparation for loop " + std::string{ pair.second });
+			shaders.emplace_back(pair.first, pair.second);
 		}
-
-
-		printGLError("Outside shader preparation for loop");
 	}
 
 	void prepareProgram() 
 	{
 		for (auto& shader : shaders) {
+			std::cout << "Shader ID: " << shader.getShaderId() << std::endl;
 			glAttachShader(shaderProgramId, shader.getShaderId());
 		}
 
 		glLinkProgram(shaderProgramId);
-
-		printGLError("After linking program");
 	}
 
 	void destroyShaders()
@@ -169,8 +160,6 @@ private:
 	}
 
 private:
-	// Using vector for the sake of simplicity
-	// TODO: use a map with GLenum keys such as GL_VERTEX_SHADER etc.
 	std::vector<Shader> shaders;
 
 

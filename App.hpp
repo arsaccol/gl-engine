@@ -41,8 +41,9 @@ public:
 
 		shaderProgram = std::make_unique<ShaderProgram>(ShaderProgram::ShaderTargetFilenamePairs{
 				{GL_VERTEX_SHADER, "vertex_shader.vert"}, 
-				{GL_FRAGMENT_SHADER, "fragment_shader.frag" } 
+				{GL_FRAGMENT_SHADER, "fragment_shader.frag"} 
 		});
+
 
 		printGLError("After shader setup");
 
