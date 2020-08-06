@@ -20,17 +20,6 @@ class App
 {
 	std::unique_ptr<ShaderProgram> shaderProgram;
 	std::unique_ptr<Mesh> triangleMesh;
-	//Mesh triangleMesh{
-	//	std::vector<Vertex>{
-	//		Vertex{ {-0.5f, -0.5f, 0.0f}, {0.f, 0.f}, {1.f, 0.f, 0.f} },
-	//		Vertex{ {0.5f, -0.5f, 0.0f}, {0.f, 0.f}, {0.f, .1f, 0.f} },
-	//		Vertex{ {0.5f, -0.5f, 0.0f}, {0.f, 0.f}, {0.f, 0.f, 1.f} },
-	//	},
-	//	std::vector<unsigned int>{ 0, 1, 2 }
-	//};
-	
-
-
 
 public:
 	App()
