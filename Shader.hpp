@@ -23,18 +23,34 @@ public:
 		, shaderTarget{shaderTarget}
 		, shaderId{glCreateShader(shaderTarget)}
 	{
+		std::cout << "Initializing shader \"" << sourceFilename << "\" with ID " << shaderId << std::endl;
 
 		if (loadAndCompileShader(shaderTarget, sourceFilename)) {
 			ready = true;
 		}
 		else {
 			// Maybe all the bool thing is redundant if we're throwing in the end?
+			throw std::runtime_error{ "Couldn't load and compile shaders" };
 		}
+	}
+
+	void deleteShader()
+	{
+		glDeleteShader(shaderId);
 	}
 
 	~Shader()
 	{
-		glDeleteShader(shaderId);
+		//////////////////////////////////////////////////////////////////////
+		// glDeleteShader is commented-out because, for some reason, 
+		// Shader::~Shader is being called when a reference to Shader
+		// exits scope in the for-loop in ShaderProgram::prepareProgram after
+		// callinig glAttachShader,
+		// and this ONLY happens in the first loop iteration, i.e. for the
+		// vertex shader as of now.
+		//////////////////////////////////////////////////////////////////////
+
+		//glDeleteShader(shaderId);
 	}
 
 	GLenum getTarget() const { return shaderTarget; }
@@ -83,13 +99,12 @@ private:
 		char const* source_pointer = sourceCode.c_str();
 
 		glShaderSource(shaderId, 1, &source_pointer, nullptr);
-
-
 		glCompileShader(shaderId);
 
 
 		// Check whether compilation was successful
 		glGetShaderiv(shaderId, GL_COMPILE_STATUS, &result);
+		std::cout << "Shader compilation status: " << result << std::endl;
 		glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &info_log_length);
 
 		if (info_log_length > 0) {
@@ -97,7 +112,6 @@ private:
 			glGetShaderInfoLog(shaderId, info_log_length, nullptr, &vertex_shader_error_message[0]);
 			printf("%s", &vertex_shader_error_message[0]);
 
-			//throw std::runtime_error(&vertex_shader_error_message[0]);
 			return false;
 		}
 		else return true;
@@ -117,10 +131,8 @@ public:
 	ShaderProgram(ShaderTargetFilenamePairs pairs)
 		: shaderProgramId{glCreateProgram()}
 	{
-
 		prepareShaders(pairs);
-
-
+		printGLError("After prepareShaders");
 		prepareProgram();
 	}
 
@@ -146,8 +158,8 @@ private:
 
 	void prepareProgram() 
 	{
-		for (auto& shader : shaders) {
-			std::cout << "Shader ID: " << shader.getShaderId() << std::endl;
+		for (const auto& shader : shaders) 
+		{
 			glAttachShader(shaderProgramId, shader.getShaderId());
 		}
 
@@ -156,6 +168,9 @@ private:
 
 	void destroyShaders()
 	{
+		for (auto& shader : shaders)
+			shader.deleteShader();
+
 		shaders.clear();
 	}
 

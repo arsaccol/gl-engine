@@ -39,7 +39,7 @@ public:
 		triangleMesh = std::make_unique<Mesh>(
 			std::vector<Vertex>{
 				Vertex{ {0.5f, 0.5f, 0.0f}, {0.f, 0.f}, {1.f, 0.f, 0.f} },
-				Vertex{ {0.5f, -0.5f, 0.0f}, {0.f, 0.f}, {0.f, .1f, 0.f} },
+				Vertex{ {0.5f, -0.5f, 0.0f}, {0.f, 0.f}, {0.f, 1.f, 0.f} },
 				Vertex{ {-0.5f, 0.5f, 0.0f}, {0.f, 0.f}, {0.f, 0.f, 1.f} },
 			},
 			std::vector<unsigned int>{ 0, 1, 2 }
