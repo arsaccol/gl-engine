@@ -20,3 +20,8 @@ void printGLError(const std::string& contextName)
 
 	std::cout << "-----------------------------------------------" << std::endl;
 }
+
+void printVector3(const std::string& name, glm::vec3 vector)
+{
+	printf("%s: %f, %f, %f\n", name.c_str(), vector.x, vector.y, vector.z);
+}
