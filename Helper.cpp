@@ -25,3 +25,8 @@ void printVector3(const std::string& name, glm::vec3 vector)
 {
 	printf("%s: %f, %f, %f\n", name.c_str(), vector.x, vector.y, vector.z);
 }
+
+void printVector2(const std::string& name, glm::vec2 vector)
+{
+	printf("%s: %f, %f\n", name.c_str(), vector.x, vector.y);
+}
