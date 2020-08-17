@@ -11,6 +11,7 @@
 
 #include "Helper.hpp"
 #include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp> // for glm::value_ptr
 
 #include <iostream>
 
@@ -144,6 +145,13 @@ public:
 
 	void disuse() const
 	{
+		glUseProgram(0);
+	}
+
+	void setMatrix4x4(const glm::mat4& matrix, const std::string& matrixNameInShader)
+	{
+		glUseProgram(shaderProgramId);
+		glUniformMatrix4fv(glGetUniformLocation(shaderProgramId, matrixNameInShader.c_str()), 1, GL_FALSE, glm::value_ptr(matrix));
 		glUseProgram(0);
 	}
 
