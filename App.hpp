@@ -10,6 +10,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp> // for glm::matrix4
 
+#include <imgui.h>
+
 #include "Shader.hpp"
 #include "Mesh.hpp"
 #include "Helper.hpp"
@@ -27,6 +29,7 @@ public:
 	{
 
 		initWindow();
+		setupInput();
 
 
 		shaderProgram = std::make_unique<ShaderProgram>(ShaderProgram::ShaderTargetFilenamePairs{
@@ -46,14 +49,9 @@ public:
 			std::vector<unsigned int>{ 0, 1, 2 }
 		);
 
-
-		//ShaderProgram shaderProgram{ { 
-		//	{GL_VERTEX_SHADER, "vertex_shader.vert"}, 
-		//	{GL_FRAGMENT_SHADER, "fragment_shader.frag" } 
-		//} };
-
 		loop();
 	}
+
 
 	void initWindow()
 	{
@@ -74,24 +72,79 @@ public:
 			throw std::exception("Failed to initialize GLAD");
 		}
 
-		glClearColor(1.f, 0, 1.f, 1.f);
+		glEnable(GL_DEPTH_TEST);
+
+		glClearColor(0.f, 0, 0.f, 1.f);
 		glViewport(0, 0, windowWidth, windowHeight);
 	}
 
 	void loop()
 	{
+		lastFrameTime = 0.0;
+
 		while (!glfwWindowShouldClose(window))
 		{
+			deltaTime = glfwGetTime() - lastFrameTime;
+			std::cout << "FPS: " << 1 / deltaTime << std::endl;
+			std::cout << "Total run time: " << glfwGetTime() << std::endl;
+			
 			processInput();
 
 			render();
 
 			glfwPollEvents();
+			lastFrameTime = glfwGetTime();
 		}
+	}
+
+	void setupInput()
+	{
+		if (glfwRawMouseMotionSupported())
+			glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+		else
+			throw std::runtime_error{ "Raw mouse input not supported" };
+
+		glfwSetInputMode(window, GLFW_CURSOR_DISABLED, GLFW_TRUE);
+		initMouseInput();
+	}
+
+
+	void initMouseInput()
+	{
+		double xpos, ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
+		glm::vec2 currentMousePosition{ static_cast<float>(xpos), static_cast<float>(ypos) };
+		lastMousePosition = currentMousePosition;
+	}
+
+
+	void imguiTest()
+	{
+		ImGui::Text("Lalala");
+
+
+	}
+
+	void handleMouseInput()
+	{
+		// Setup mouse delta
+		double xpos, ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
+		glm::vec2 currentMousePosition{ static_cast<float>(xpos), static_cast<float>(ypos) };
+		mouseDelta = currentMousePosition - lastMousePosition;
+		printVector2("Mouse delta", mouseDelta);
+		lastMousePosition = currentMousePosition;
+
+
+		// Actually handle mouse input
+		camera.mouseLook(mouseDelta, deltaTime);
 	}
 
 	void processInput()
 	{
+		handleMouseInput();
+
+
 		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
 			glfwSetWindowShouldClose(window, true);
 		}
@@ -100,11 +153,11 @@ public:
 
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 			walkDirection = Camera::WalkDirection::FORWARD;
-		else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 			walkDirection = Camera::WalkDirection::BACKWARD;
-		else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 			walkDirection = Camera::WalkDirection::STRAFE_LEFT;
-		else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 			walkDirection = Camera::WalkDirection::STRAFE_RIGHT;
 		camera.walk(walkDirection);
 
@@ -112,7 +165,7 @@ public:
 
 	void render()
 	{
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glm::mat4 view = camera.getMatrix();
 
@@ -142,6 +195,9 @@ public:
 	const int windowHeight = 600;
 
 
+	double deltaTime;
+	double lastFrameTime;
+	glm::vec2 lastMousePosition;
 	glm::vec2 mouseDelta;
 	GLFWwindow* window;
 	Camera camera{ glm::vec3{0, 0, 3}, glm::vec3{0, 0, -1} };

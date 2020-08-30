@@ -2,10 +2,13 @@
 
 #include <stdexcept>
 #include <iostream>
+#include <algorithm>
 
 #include <glm/mat4x4.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/projection.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #include <GLFW/glfw3.h>
 
@@ -26,9 +29,16 @@ public:
 
 
 	// Start it at, say, {0, 0, 3.f}
-	float movementSpeed{ .5f };
+	float mouselookSensitivity{ .5f };
+	float movementSpeed{ .1f };
 	glm::vec3 position;
-	glm::vec3 eulerOrientation{ 0.f, 0.f, 0.f };
+
+	float pitch{ 0.f };
+	float yaw{ 0.f };
+	float roll{ 0.f };
+
+
+
 
 	// Look at, say, {0.f, 0.f, 0.f}
 	glm::vec3 forward;
@@ -37,12 +47,12 @@ public:
 
 	Camera(glm::vec3 startingPosition, glm::vec3 lookingAt)
 		: position{startingPosition}
-		, forward{glm::normalize(lookingAt)}
+		, forward{glm::normalize(lookingAt - startingPosition)}
 		, up{ 0.f, 1.f, 0.f }
 	{
-		right = glm::normalize(glm::cross(forward, up));
+		right = glm::normalize(glm::cross(up, forward));
+		//up = glm::normalize(glm::cross(forward, right));
 	}
-
 
 
 	glm::mat4x4 getMatrix()
@@ -78,12 +88,46 @@ public:
 			break;
 		}
 
+		// project walkVector onto xz plane so it doesn't climb or descend
+		walkVector.y = 0.f;
+
 		position = position + walkVector * movementSpeed;
 	}
 
-	void mouseLook(float mouseDeltaX, float mouseDeltaY)
+	void mouseLook(glm::vec2 mouseDelta, double deltaTime)
 	{
+		yaw += mouseDelta.x * mouselookSensitivity;
+		if (yaw > 359.999f || yaw < -359.999f) {
+			yaw = std::fmodf(yaw, 359.999f);
+		}
 
+		pitch += -mouseDelta.y * mouselookSensitivity;
+		pitch = std::clamp(pitch, -80.f, 80.f);
+
+		updateVectorsFromOrientationAngles();
+	}
+
+	void updateVectorsFromOrientationAngles()
+	{
+		forward = glm::normalize(glm::vec3{
+			glm::sin(glm::radians(yaw)),
+			glm::sin(glm::radians(pitch)),
+			-glm::cos(glm::radians(pitch)) * glm::cos(glm::radians(yaw))
+		});
+		right = glm::cross(forward, up);
+
+		printCameraDiagnostics();
+	}
+
+	void printCameraDiagnostics()
+	{
+		printf("====================\n");
+		printf("Yaw: %f --- Pitch: %f\n", yaw, pitch);
+		printVector3("Position: ", position);
+		printVector3("Forward vector: ", forward);
+		printVector3("Right vector: ", right);
+		printVector3("Up vector: ", up);
+		printf("====================\n");
 	}
 
 };
