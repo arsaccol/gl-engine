@@ -8,6 +8,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/projection.hpp>
+
 #include <glm/gtc/quaternion.hpp>
 
 #include <GLFW/glfw3.h>
@@ -89,22 +90,28 @@ public:
 		}
 
 		// project walkVector onto xz plane so it doesn't climb or descend
-		walkVector.y = 0.f;
+		//walkVector.y = 0.f;
 
 		position = position + walkVector * movementSpeed;
 	}
 
 	void mouseLook(glm::vec2 mouseDelta, double deltaTime)
 	{
-		yaw += mouseDelta.x * mouselookSensitivity;
-		if (yaw > 359.999f || yaw < -359.999f) {
-			yaw = std::fmodf(yaw, 359.999f);
-		}
+		//yaw += mouseDelta.x * mouselookSensitivity;
+		//if (yaw > 359.999f || yaw < -359.999f) {
+		//	yaw = std::fmodf(yaw, 359.999f);
+		//}
 
-		pitch += -mouseDelta.y * mouselookSensitivity;
-		pitch = std::clamp(pitch, -80.f, 80.f);
+		//pitch += -mouseDelta.y * mouselookSensitivity;
+		//pitch = std::clamp(pitch, -80.f, 80.f);
 
-		updateVectorsFromOrientationAngles();
+		//updateVectorsFromOrientationAngles();
+		glm::vec3 rotationEuler = updateVectorsUsingQuaternions(mouseDelta.x, mouseDelta.y, static_cast<float>(deltaTime));
+		yaw += rotationEuler.y;
+		pitch += rotationEuler.x;
+
+		printCameraDiagnostics();
+		//pitch = rotationEuler * 
 	}
 
 	void updateVectorsFromOrientationAngles()
@@ -117,6 +124,23 @@ public:
 		right = glm::cross(forward, up);
 
 		printCameraDiagnostics();
+	}
+
+	// returns euler angles of quaternion rotation
+	// this function is terribly designed, as it both changes state in the camera transform
+	// and  
+	glm::vec3 updateVectorsUsingQuaternions(float mouseDeltaX, float mouseDeltaY, float deltaTime)
+	{
+		//glm::vec3 eulerAngles{ glm::radians(mouseDeltaY), glm::radians(mouseDeltaX), 0.f };
+		//glm::quat rotationQuaternion{ eulerAngles };
+
+		glm::quat yawRotation{ glm::angleAxis(glm::radians(mouseDeltaX * mouselookSensitivity), up) };
+		glm::quat pitchRotation{ glm::angleAxis(glm::radians(mouseDeltaY * mouselookSensitivity), right) };
+
+		forward = forward * yawRotation * pitchRotation;
+		right = glm::cross(forward, up);
+
+		return glm::eulerAngles(yawRotation * pitchRotation);
 	}
 
 	void printCameraDiagnostics()
