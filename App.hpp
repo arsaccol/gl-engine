@@ -191,8 +191,8 @@ public:
 		glfwTerminate();
 	}
 
-	const int windowWidth = 800;
-	const int windowHeight = 600;
+	const int windowWidth = 960;
+	const int windowHeight = 540;
 
 
 	double deltaTime;
