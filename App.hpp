@@ -23,6 +23,7 @@ class App
 {
 	std::unique_ptr<ShaderProgram> shaderProgram;
 	std::unique_ptr<Mesh> triangleMesh;
+	std::unique_ptr<Mesh> cubeMesh;
 
 public:
 	App()
@@ -48,6 +49,43 @@ public:
 			},
 			std::vector<unsigned int>{ 0, 1, 2 }
 		);
+
+		cubeMesh = std::make_unique<Mesh>(
+			std::vector{
+				// uh, front, I guess?
+				Vertex{{-1.f, -1.f, 1.f}, {0.f, 0.f},  {1.f, 0.f, 0.f}},
+				Vertex{{1.f, -1.f, 1.f}, {0.f, 0.f},  {0.f, 1.f, 0.f}},
+				Vertex{{1.f, 1.f, 1.f}, {0.f, 0.f}, {0.f, 0.f, 1.f}},
+				Vertex{{-1.f, 1.f, 1.f}, {0.f, 0.f}, {1.f, 1.f, 1.f}},
+				// back...?
+				Vertex{{-1.f, -1.f, -1.f}, {0.f, 0.f}, {1.f, 0.f, 0.f}},
+				Vertex{{1.f, -1.f, -1.f}, {0.f, 0.f}, {0.f, 1.f, 0.f}},
+				Vertex{{1.f, 1.f, -1.f}, {0.f, 0.f}, {0.f, 0.f, 1.f}},
+				Vertex{{-1.f, 1.f, -1.f}, {0.f, 0.f}, {1.f, 1.f, 1.f}}
+			},
+			// indices for index buffer
+			std::vector<unsigned int>{
+				// front
+				0, 1, 2,
+				2, 3, 0,
+				// right
+				1, 5, 6,
+				6, 2, 1,
+				// back
+				7, 6, 5,
+				5, 4, 7,
+				// left
+				4, 0, 3,
+				3, 7, 4,
+				// botttom
+				4, 5, 1,
+				1, 0, 4,
+				// top
+				3, 2, 6,
+				6, 7, 3
+			}
+		);
+
 
 		loop();
 	}
@@ -175,6 +213,7 @@ public:
 		shaderProgram->setMatrix4x4(view_projection, "MVP");
 
 		triangleMesh->draw(*shaderProgram);
+		cubeMesh->draw(*shaderProgram);
 
 		glfwSwapBuffers(window);
 	}
