@@ -52,16 +52,16 @@ public:
 
 		cubeMesh = std::make_unique<Mesh>(
 			std::vector{
-				// uh, front, I guess?
-				Vertex{{-1.f, -1.f, 1.f}, {0.f, 0.f},  {1.f, 0.f, 0.f}},
-				Vertex{{1.f, -1.f, 1.f}, {0.f, 0.f},  {0.f, 1.f, 0.f}},
-				Vertex{{1.f, 1.f, 1.f}, {0.f, 0.f}, {0.f, 0.f, 1.f}},
-				Vertex{{-1.f, 1.f, 1.f}, {0.f, 0.f}, {1.f, 1.f, 1.f}},
-				// back...?
-				Vertex{{-1.f, -1.f, -1.f}, {0.f, 0.f}, {1.f, 0.f, 0.f}},
-				Vertex{{1.f, -1.f, -1.f}, {0.f, 0.f}, {0.f, 1.f, 0.f}},
-				Vertex{{1.f, 1.f, -1.f}, {0.f, 0.f}, {0.f, 0.f, 1.f}},
-				Vertex{{-1.f, 1.f, -1.f}, {0.f, 0.f}, {1.f, 1.f, 1.f}}
+				// front
+				Vertex{{-.5f, -.5f, .5f}, {0.f, 0.f},  {1.f, 0.f, 0.f}},
+				Vertex{{.5f, -.5f, .5f}, {0.f, 0.f},  {0.f, 1.f, 0.f}},
+				Vertex{{.5f, .5f, .5f}, {0.f, 0.f}, {0.f, 0.f, 1.f}},
+				Vertex{{-.5f, .5f, .5f}, {0.f, 0.f}, {1.f, 1.f, 1.f}},
+				// back 
+				Vertex{{-.5f, -.5f, -.5f}, {0.f, 0.f}, {1.f, 0.f, 0.f}},
+				Vertex{{.5f, -.5f, -.5f}, {0.f, 0.f}, {0.f, 1.f, 0.f}},
+				Vertex{{.5f, .5f, -.5f}, {0.f, 0.f}, {0.f, 0.f, 1.f}},
+				Vertex{{-.5f, .5f, -.5f}, {0.f, 0.f}, {1.f, 1.f, 1.f}}
 			},
 			// indices for index buffer
 			std::vector<unsigned int>{
