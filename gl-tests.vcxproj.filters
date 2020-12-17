@@ -53,6 +53,9 @@
     <ClInclude Include="Camera.hpp">
       <Filter>Camera</Filter>
     </ClInclude>
+    <ClInclude Include="Event\EventDispatcher.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment_shader.frag">
