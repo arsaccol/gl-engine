@@ -1,3 +1,4 @@
+#pragma once
 // say we have an FPS camera
 // it looks around and moves around (on a horizontal plane)
 // to look around, we need a 2D vector as "input" to yaw and pitch our camera
@@ -14,6 +15,8 @@
 struct Event
 {
 	std::string eventType;
+
+	virtual ~Event() = default;
 };
 
 
@@ -26,7 +29,7 @@ public:
 public:
 
 	template <typename EventSubType>
-	void RegisterHandler(const EventHandler& handler);
+	void On(const EventHandler& handler);
 
 	template <typename T>
 	void DispatchEvent(const Event& event);
@@ -46,7 +49,7 @@ private:
 
 // ============= Template method implementations =============
 template <typename EventSubType>
-void EventDispatcher::RegisterHandler(const EventHandler& handler)
+void EventDispatcher::On(const EventHandler& handler)
 {
 	eventHandlers.insert(std::pair<std::type_index, EventHandler>(typeid(EventSubType), handler));
 }
@@ -55,7 +58,7 @@ template <typename T>
 void EventDispatcher::DispatchEvent(const Event& event)
 {
 	// I'm not quite sure this cast will work as intended...
-	const T& derivedEvent = static_cast<const T&>(event);
+	const T& derivedEvent = dynamic_cast<const T&>(event);
 
 	// equal_range gives us begin and end iterators for the range of values under the given key (i.e. event type)
 	std::pair<HandlerCollection::iterator, HandlerCollection::iterator> pairs =
