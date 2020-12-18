@@ -150,6 +150,7 @@
     <ClInclude Include="App.hpp" />
     <ClInclude Include="Camera.hpp" />
     <ClInclude Include="Event\EventDispatcher.hpp" />
+    <ClInclude Include="Event\Observer.hpp" />
     <ClInclude Include="Helper.hpp" />
     <ClInclude Include="Mesh.hpp" />
     <ClInclude Include="Shader.hpp" />
