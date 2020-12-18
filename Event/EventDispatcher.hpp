@@ -17,6 +17,7 @@ struct Event
 };
 
 
+// It's a singleton!
 class EventDispatcher
 {
 public:
@@ -36,6 +37,7 @@ public:
 	}
 
 private:
+	EventDispatcher() = default;
 	HandlerCollection eventHandlers;
 	static EventDispatcher instance;
 };
