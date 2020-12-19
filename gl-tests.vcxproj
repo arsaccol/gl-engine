@@ -153,6 +153,7 @@
     <ClInclude Include="Event\Observer.hpp" />
     <ClInclude Include="Helper.hpp" />
     <ClInclude Include="Mesh.hpp" />
+    <ClInclude Include="Event\Observable.hpp" />
     <ClInclude Include="Shader.hpp" />
     <ClInclude Include="Vertex.hpp" />
   </ItemGroup>
