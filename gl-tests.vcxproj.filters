@@ -65,6 +65,9 @@
     <ClInclude Include="Event\Observable.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Event\EventSystem.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment_shader.frag">
