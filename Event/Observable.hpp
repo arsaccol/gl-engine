@@ -2,6 +2,8 @@
 
 class Event;
 
+// Inherit from this class, and use
+// SendEvent<YourEventTypeHere>() calls to emit events
 class Observable
 {
 public:
