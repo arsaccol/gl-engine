@@ -1,17 +1,20 @@
 #pragma once
 
-class Event;
-
-// Inherit from this class, and use
-// SendEvent<YourEventTypeHere>() calls to emit events
-class Observable
+namespace event 
 {
-public:
-	template <typename EventSubType>
-	void SendEvent(const Event& event)
-	{
-		EventDispatcher::Instance().DispatchEvent<EventSubType>(event);
-	}
+	class Event;
 
-	~Observable() = default;
-};
+	// Inherit from this class, and use
+	// SendEvent<YourEventTypeHere>() calls to emit events
+	class Observable
+	{
+	public:
+		template <typename EventSubType>
+		void SendEvent(const Event& event)
+		{
+			EventDispatcher::Instance().DispatchEvent<EventSubType>(event);
+		}
+
+		~Observable() = default;
+	};
+}

@@ -1,3 +1,6 @@
 #include "EventDispatcher.hpp"
 
-EventDispatcher EventDispatcher::instance;
+namespace event 
+{
+	EventDispatcher EventDispatcher::instance;
+}
