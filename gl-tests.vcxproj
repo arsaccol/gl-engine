@@ -157,6 +157,7 @@
     <ClInclude Include="Event\Observable.hpp" />
     <ClInclude Include="Shader.hpp" />
     <ClInclude Include="Vertex.hpp" />
+    <ClInclude Include="Window.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment_shader.frag" />
