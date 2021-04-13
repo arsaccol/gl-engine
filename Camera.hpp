@@ -110,7 +110,7 @@ public:
 		yaw += rotationEuler.y;
 		pitch += rotationEuler.x;
 
-		printCameraDiagnostics();
+		//printCameraDiagnostics();
 		//pitch = rotationEuler * 
 	}
 
