@@ -75,14 +75,11 @@ void Input::mouseMotionInput(float deltaTime)
 	// printVector2(mouseDelta) etc etc 
 	lastMousePosition = currentMousePosition;
 
-	// This is for the future pretty much, right now we ape the old window input code
-	//*** normally: 
 	camera->mouseLook(mouseDelta, deltaTime);
-	//*** actually meant to be: 
-	//***CharacterLookEvent event;
-	//***event.LookDirection = mouseDelta;
-	//***SendEvent<CharacterLookEvent>(event);
 
+	CharacterLookEvent event;
+	event.LookDirection = mouseDelta;
+	SendEvent<CharacterLookEvent>(event);
 }
 
 // almost the same as before; call this function from outside I guess
@@ -90,7 +87,6 @@ void Input::mouseMotionInput(float deltaTime)
 void Input::processInput(float deltaTime)
 {
 	glfwPollEvents();
-	printf("Processing input!\n");
 
 	mouseMotionInput(deltaTime);
 

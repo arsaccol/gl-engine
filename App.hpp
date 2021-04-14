@@ -19,6 +19,9 @@
 #include "Input/InputSystem.hpp"
 
 
+#include "Player.hpp"
+
+
 class App
 {
 	std::unique_ptr<ShaderProgram> shaderProgram;
@@ -32,7 +35,7 @@ public:
 		: windowObject{ windowWidth, windowHeight, "App" }
 	{
 		initGL();
-		input.setup(windowObject, camera);
+		input.setup(windowObject, player.camera);
 
 		shaderProgram = std::make_unique<ShaderProgram>(ShaderProgram::ShaderTargetFilenamePairs{
 				{GL_VERTEX_SHADER, "vertex_shader.vert"}, 
@@ -110,9 +113,9 @@ public:
 
 		while (!windowObject.shouldClose())
 		{
-			deltaTime = glfwGetTime() - lastFrameTime;
-			std::cout << "FPS: " << 1 / deltaTime << std::endl;
-			std::cout << "Total run time: " << glfwGetTime() << std::endl;
+			deltaTime = glfwGetTime() - lastFrameTime; 
+			
+			//glfwSetWindowTitle(windowObject.getAPIWindowPtr(), std::to_string(1 / deltaTime).c_str());
 			
 			input.processInput(deltaTime);
 
@@ -127,7 +130,7 @@ public:
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glm::mat4 view = camera.getMatrix();
+		glm::mat4 view = player.camera.getMatrix();
 
 		glm::mat4 projection = glm::perspective<float>(glm::radians(60.f), (float)windowWidth / (float)windowHeight, 1.f, 100.f);
 		glm::mat4 view_projection =  projection * view;
@@ -146,6 +149,7 @@ public:
 		glViewport(0, 0, width, height);
 	}
 
+	Player player;
 
 	const int windowWidth = 960;
 	const int windowHeight = 540;
@@ -156,5 +160,5 @@ public:
 	glm::vec2 lastMousePosition;
 	glm::vec2 mouseDelta;
 	Window windowObject;
-	Camera camera{ glm::vec3{0, 0, 3}, glm::vec3{0, 0, -1} };
+	//Camera camera{ glm::vec3{0, 0, 3}, glm::vec3{0, 0, -1} };
 };
