@@ -62,6 +62,11 @@ public:
 		return glm::lookAt(position, position + forward, up);
 	}
 
+	glm::mat4x4 getMatrix(glm::vec3 position, glm::vec3 forward, glm::vec3 up)
+	{
+		return glm::lookAt(position, position + forward, up);
+	}
+
 	void walk(WalkDirection walkDirection)
 	{
 		//walkDirection = glm::normalize(walkDirection);
@@ -95,7 +100,7 @@ public:
 		position = position + walkVector * movementSpeed;
 	}
 
-	void mouseLook(glm::vec2 mouseDelta, double deltaTime)
+	void mouseLook(glm::vec2 mouseDelta)
 	{
 		//yaw += mouseDelta.x * mouselookSensitivity;
 		//if (yaw > 359.999f || yaw < -359.999f) {
@@ -106,7 +111,7 @@ public:
 		//pitch = std::clamp(pitch, -80.f, 80.f);
 
 		//updateVectorsFromOrientationAngles();
-		glm::vec3 rotationEuler = updateVectorsUsingQuaternions(mouseDelta.x, mouseDelta.y, static_cast<float>(deltaTime));
+		glm::vec3 rotationEuler = updateVectorsUsingQuaternions(mouseDelta.x, mouseDelta.y);
 		yaw += rotationEuler.y;
 		pitch += rotationEuler.x;
 
@@ -129,7 +134,7 @@ public:
 	// returns euler angles of quaternion rotation
 	// this function is terribly designed, as it both changes state in the camera transform
 	// and  
-	glm::vec3 updateVectorsUsingQuaternions(float mouseDeltaX, float mouseDeltaY, float deltaTime)
+	glm::vec3 updateVectorsUsingQuaternions(float mouseDeltaX, float mouseDeltaY)
 	{
 		//glm::vec3 eulerAngles{ glm::radians(mouseDeltaY), glm::radians(mouseDeltaX), 0.f };
 		//glm::quat rotationQuaternion{ eulerAngles };
