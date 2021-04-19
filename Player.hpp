@@ -72,6 +72,27 @@ void Player::registerWalkHandler()
 	auto walkHandler = [&](const event::Event& e) {
 		const auto& walkEvent = dynamic_cast<const CharacterWalkEvent&>(e);
 		printf("walkEvent.DirectionFlags %04x\n", walkEvent.DirectionFlags);
+
+		auto& eventWalkDirection = walkEvent.DirectionFlags;
+
+
+		// this is stupid and defeats the purpose of having flags, but
+		// for now we're doing it to simply remove the camera reference from the Input class;
+		// afterwards we can use a proper vector or something to dictate walk movement with
+		// diagonal directions and all that stuff
+
+		auto legacyWalkDirection = Camera::WalkDirection::NO_WALK;
+
+		if (eventWalkDirection & WalkDirections::FORWARD)
+			legacyWalkDirection = Camera::WalkDirection::FORWARD;
+		else if (eventWalkDirection & WalkDirections::BACKWARD)
+			legacyWalkDirection = Camera::WalkDirection::BACKWARD;
+		else if (eventWalkDirection & WalkDirections::STRAFE_LEFT)
+			legacyWalkDirection = Camera::WalkDirection::STRAFE_LEFT;
+		else if (eventWalkDirection & WalkDirections::STRAFE_RIGHT)
+			legacyWalkDirection = Camera::WalkDirection::STRAFE_RIGHT;
+
+		camera.walk(legacyWalkDirection);
 	};
 
 	eventDispatcher.On<CharacterWalkEvent>(walkHandler);

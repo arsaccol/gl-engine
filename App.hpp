@@ -35,7 +35,7 @@ public:
 		: windowObject{ windowWidth, windowHeight, "App" }
 	{
 		initGL();
-		input.setup(windowObject, player.camera);
+		input.setup(windowObject);
 
 		shaderProgram = std::make_unique<ShaderProgram>(ShaderProgram::ShaderTargetFilenamePairs{
 				{GL_VERTEX_SHADER, "vertex_shader.vert"}, 
