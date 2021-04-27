@@ -45,13 +45,14 @@ void Input::setup(Window& window)
 	this->window = &window;
 
 
+	glfwSetInputMode(this->window->getAPIWindowPtr(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 	if (glfwRawMouseMotionSupported())
 		glfwSetInputMode(this->window->getAPIWindowPtr(), GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 	else {
 		throw std::runtime_error{ "Raw mouse input not supported" };
 	}
 
-	glfwSetInputMode(this->window->getAPIWindowPtr(), GLFW_CURSOR_DISABLED, GLFW_TRUE);
 	initMouseInput();
 }
 
