@@ -10,7 +10,7 @@ namespace event
 	{
 	public:
 		template <typename EventSubType>
-		void SendEvent(const Event& event)
+		static void SendEvent(const Event& event)
 		{
 			EventDispatcher::Instance().DispatchEvent<EventSubType>(event);
 		}

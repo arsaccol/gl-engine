@@ -24,11 +24,18 @@ private:
 	void mouseMotionInput(float deltaTime);
 	void initMouseInput();
 
+public:
+	static void mouseCursorCallback(GLFWwindow* window, double xpos, double ypos);
+
 private:
 	Window* window;
-	glm::vec2 lastMousePosition;
-	glm::vec2 mouseDelta;
+	static glm::vec2 lastMousePosition;
+	static glm::vec2 mouseDelta;
 };
+
+// static member variable definitions
+glm::vec2 Input::lastMousePosition;
+glm::vec2 Input::mouseDelta;
 
 // ============ method implementations ============
 
@@ -52,6 +59,9 @@ void Input::setup(Window& window)
 
 void Input::initMouseInput()
 {
+	glfwSetCursorPosCallback(window->getAPIWindowPtr(), mouseCursorCallback);
+
+
 	double xpos, ypos;
 	glfwGetCursorPos(this->window->getAPIWindowPtr(), &xpos, &ypos);
 	glm::vec2 currentMousePosition{ static_cast<float>(xpos), static_cast<float>(ypos) };
@@ -59,15 +69,8 @@ void Input::initMouseInput()
 }
 
 
-void Input::updateInput()
+void Input::mouseCursorCallback(GLFWwindow* window, double xpos, double ypos)
 {
-}
-
-// handleMouseInput
-void Input::mouseMotionInput(float deltaTime)
-{
-	double xpos, ypos;
-	glfwGetCursorPos(window->getAPIWindowPtr(), &xpos, &ypos);
 	glm::vec2 currentMousePosition{ static_cast<float>(xpos), static_cast<float>(ypos) };
 	mouseDelta = currentMousePosition - lastMousePosition;
 	// printVector2(mouseDelta) etc etc 
@@ -78,13 +81,18 @@ void Input::mouseMotionInput(float deltaTime)
 	SendEvent<CharacterLookEvent>(event);
 }
 
+
+void Input::updateInput()
+{
+}
+
+
 // almost the same as before; call this function from outside I guess
 // just one difference is we now have the deltaTime thing... goddamn it
 void Input::processInput(float deltaTime)
 {
 	glfwPollEvents();
 
-	mouseMotionInput(deltaTime);
 
 	if (glfwGetKey(window->getAPIWindowPtr(), GLFW_KEY_Q) == GLFW_PRESS)
 		window->setShouldClose();
