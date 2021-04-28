@@ -98,6 +98,7 @@ void Player::registerWalkHandler()
 	auto& eventDispatcher = event::EventDispatcher::Instance();
 
 	auto walkHandler = [&](const event::Event& e) {
+
 		const auto& walkEvent = dynamic_cast<const CharacterWalkEvent&>(e);
 		//printf("walkEvent.DirectionFlags %04x\n", walkEvent.DirectionFlags);
 
@@ -113,19 +114,19 @@ void Player::registerWalkHandler()
 		glm::vec3 walkVector{ 0, 0, 0 };
 
 		if (eventWalkDirection & WalkDirections::FORWARD) {
-			legacyWalkDirection = Camera::WalkDirection::FORWARD;
+			//legacyWalkDirection = Camera::WalkDirection::FORWARD;
 			walkVector = glm::normalize(walkVector + transform.forward());
 		}
-		else if (eventWalkDirection & WalkDirections::BACKWARD) {
-			legacyWalkDirection = Camera::WalkDirection::BACKWARD;
+		if (eventWalkDirection & WalkDirections::BACKWARD) {
+			//legacyWalkDirection = Camera::WalkDirection::BACKWARD;
 			walkVector = glm::normalize(walkVector + -transform.forward());
 		}
-		else if (eventWalkDirection & WalkDirections::STRAFE_LEFT) {
-			legacyWalkDirection = Camera::WalkDirection::STRAFE_LEFT;
+		if (eventWalkDirection & WalkDirections::STRAFE_LEFT) {
+			//legacyWalkDirection = Camera::WalkDirection::STRAFE_LEFT;
 			walkVector = glm::normalize(walkVector + -transform.right());
 		}
-		else if (eventWalkDirection & WalkDirections::STRAFE_RIGHT) {
-			legacyWalkDirection = Camera::WalkDirection::STRAFE_RIGHT;
+		if (eventWalkDirection & WalkDirections::STRAFE_RIGHT) {
+			//legacyWalkDirection = Camera::WalkDirection::STRAFE_RIGHT;
 			walkVector = glm::normalize(walkVector + transform.right());
 		}
 		printVector3("Walk vector: ", walkVector);
