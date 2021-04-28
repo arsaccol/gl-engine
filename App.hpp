@@ -130,7 +130,15 @@ public:
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glm::mat4 view = player.camera.getMatrix();
+		//glm::mat4 view = player.camera.getMatrix();
+		glm::vec3 position = player.transform.position;
+		glm::vec3 forward = player.transform.forward();
+		glm::vec3 up = player.transform.up();
+
+		glm::mat4 view = glm::lookAt(position, position + forward, up);
+
+		
+
 
 		glm::mat4 projection = glm::perspective<float>(glm::radians(60.f), (float)windowWidth / (float)windowHeight, 1.f, 100.f);
 		glm::mat4 view_projection =  projection * view;
