@@ -21,7 +21,6 @@ public:
 
 private:
 	void updateInput();
-	void mouseMotionInput(float deltaTime);
 	void initMouseInput();
 
 public:
