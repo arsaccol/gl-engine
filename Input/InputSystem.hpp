@@ -45,6 +45,10 @@ void Input::setup(Window& window)
 	this->window = &window;
 
 
+	// this causes the cursor not to call the mouselook callback in the first frame;
+	// what seems to be happening is that the camera right is either inverted upon construction,
+	// or the mouse callback itself inverts it, though the latter feels unlikely since, uuuh, maybe 
+	// the callback would invert the camera every frame?
 	glfwSetInputMode(this->window->getAPIWindowPtr(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	if (glfwRawMouseMotionSupported())
@@ -54,6 +58,12 @@ void Input::setup(Window& window)
 	}
 
 	initMouseInput();
+
+	// HACK: send event with a {0,0} mouse delta to initialize camera
+	//		 so it doesn't start with the right vector inverted
+	CharacterLookEvent lookEvent;
+	lookEvent.LookDirection = { 0, 0 };
+	SendEvent<CharacterLookEvent>(lookEvent);
 }
 
 
