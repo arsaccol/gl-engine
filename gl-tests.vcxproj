@@ -163,6 +163,7 @@
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="Shader.hpp" />
     <ClInclude Include="Transform.hpp" />
+    <ClInclude Include="UI\ui.hpp" />
     <ClInclude Include="Vertex.hpp" />
     <ClInclude Include="Window.hpp" />
   </ItemGroup>

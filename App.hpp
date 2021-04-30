@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <functional>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -21,6 +22,8 @@
 
 #include "Player.hpp"
 
+#include "UI/ui.hpp"
+
 
 class App
 {
@@ -36,6 +39,9 @@ public:
 	{
 		initGL();
 		input.setup(windowObject);
+
+
+
 
 		shaderProgram = std::make_unique<ShaderProgram>(ShaderProgram::ShaderTargetFilenamePairs{
 				{GL_VERTEX_SHADER, "vertex_shader.vert"}, 
@@ -90,8 +96,14 @@ public:
 			}
 		);
 
+		ui.Init(windowObject.getAPIWindowPtr());
 
 		loop();
+	}
+
+	~App()
+	{
+		ui.Shutdown();
 	}
 
 
@@ -130,23 +142,27 @@ public:
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//glm::mat4 view = player.camera.getMatrix();
-		glm::vec3 position = player.transform.position;
-		glm::vec3 forward = player.transform.forward();
-		glm::vec3 up = player.transform.up();
+		const auto sceneRenderFunction = [&] {
+			//glm::mat4 view = player.camera.getMatrix();
+			glm::vec3 position = player.transform.position;
+			glm::vec3 forward = player.transform.forward();
+			glm::vec3 up = player.transform.up();
 
-		glm::mat4 view = glm::lookAt(position, position + forward, up);
+			glm::mat4 view = glm::lookAt(position, position + forward, up);
 
-		
+			
 
 
-		glm::mat4 projection = glm::perspective<float>(glm::radians(60.f), (float)windowWidth / (float)windowHeight, 1.f, 100.f);
-		glm::mat4 view_projection =  projection * view;
+			glm::mat4 projection = glm::perspective<float>(glm::radians(60.f), (float)windowWidth / (float)windowHeight, 1.f, 100.f);
+			glm::mat4 view_projection =  projection * view;
 
-		shaderProgram->setMatrix4x4(view_projection, "MVP");
+			shaderProgram->setMatrix4x4(view_projection, "MVP");
 
-		triangleMesh->draw(*shaderProgram);
-		cubeMesh->draw(*shaderProgram);
+			triangleMesh->draw(*shaderProgram);
+			cubeMesh->draw(*shaderProgram);
+		};
+		ui.Frame(sceneRenderFunction);
+
 
 		glfwSwapBuffers(windowObject.getAPIWindowPtr());
 	}
@@ -168,5 +184,6 @@ public:
 	glm::vec2 lastMousePosition;
 	glm::vec2 mouseDelta;
 	Window windowObject;
+	UI ui;
 	//Camera camera{ glm::vec3{0, 0, 3}, glm::vec3{0, 0, -1} };
 };
