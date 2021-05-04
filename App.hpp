@@ -175,8 +175,8 @@ public:
 
 	Player player;
 
-	const int windowWidth = 960;
-	const int windowHeight = 540;
+	const int windowWidth = 1920;
+	const int windowHeight = 1080;
 
 
 	double deltaTime;
