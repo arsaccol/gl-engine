@@ -19,8 +19,10 @@ public:
 	void Init(GLFWwindow* windowPtr);
 	void Shutdown();
 	void Frame(const std::function<void()>& OpenGLRenderFunction);
+	void BeginFrame();
+	void EndFrame();
 
-private:
+public:
 	void RenderGUI();
 
 private:
@@ -52,6 +54,21 @@ void UI::Shutdown()
 	ImGui::DestroyContext();
 }
 
+void UI::BeginFrame()
+{
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+	// ImGui window/draw calls should start here 
+}
+
+void UI::EndFrame()
+{
+	// ImGui window/draw calls should have ended prior to this point
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
 
 void UI::Frame(const std::function<void()>& SceneRenderFunction)
 {
@@ -73,6 +90,9 @@ void UI::RenderGUI()
 
 	SetNextWindowSize(ImVec2{ 100, 50 });
 	Begin("Hello");
+#ifdef _DEBUG
+	Text("DEBUG");
+#endif
 
 	Button("world!");
 	//ShowDemoWindow();
