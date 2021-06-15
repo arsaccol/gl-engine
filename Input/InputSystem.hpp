@@ -30,11 +30,13 @@ private:
 	Window* window;
 	static glm::vec2 lastMousePosition;
 	static glm::vec2 mouseDelta;
+	static bool debugControls;
 };
 
 // static member variable definitions
 glm::vec2 Input::lastMousePosition;
 glm::vec2 Input::mouseDelta;
+bool Input::debugControls = false;
 
 // ============ method implementations ============
 
@@ -42,6 +44,9 @@ glm::vec2 Input::mouseDelta;
 void Input::setup(Window& window)
 {
 	this->window = &window;
+
+	// reassign anyway I guess
+	debugControls = false;
 
 
 	// this causes the cursor not to call the mouselook callback in the first frame;
@@ -81,14 +86,17 @@ void Input::initMouseInput()
 
 void Input::mouseCursorCallback(GLFWwindow* window, double xpos, double ypos)
 {
-	glm::vec2 currentMousePosition{ static_cast<float>(xpos), static_cast<float>(ypos) };
-	mouseDelta = currentMousePosition - lastMousePosition;
-	// printVector2(mouseDelta) etc etc 
-	lastMousePosition = currentMousePosition;
+	if (!debugControls)
+	{
+		glm::vec2 currentMousePosition{ static_cast<float>(xpos), static_cast<float>(ypos) };
+		mouseDelta = currentMousePosition - lastMousePosition;
+		// printVector2(mouseDelta) etc etc 
+		lastMousePosition = currentMousePosition;
 
-	CharacterLookEvent event;
-	event.LookDirection = mouseDelta;
-	SendEvent<CharacterLookEvent>(event);
+		CharacterLookEvent event;
+		event.LookDirection = mouseDelta;
+		SendEvent<CharacterLookEvent>(event);
+	}
 }
 
 
@@ -111,6 +119,15 @@ void Input::processInput(float deltaTime)
 	auto apiWindowPtr = this->window->getAPIWindowPtr();
 
 	int directionFlags = 0;
+
+	if (glfwGetKey(apiWindowPtr, GLFW_KEY_LEFT_CONTROL)) {
+		debugControls = !debugControls;
+		if(debugControls == true)
+			glfwSetInputMode(this->window->getAPIWindowPtr(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		else {
+			glfwSetInputMode(this->window->getAPIWindowPtr(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		}
+	}
 
 	if (glfwGetKey(apiWindowPtr, GLFW_KEY_W) == GLFW_PRESS) {
 		directionFlags |= WalkDirections::FORWARD;
