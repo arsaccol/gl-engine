@@ -161,7 +161,7 @@ public:
 		triangleMesh->draw(*shaderProgram);
 		cubeMesh->draw(*shaderProgram);
 
-		ui.RenderGUI();
+		player.Debug();
 
 		ui.EndFrame();
 

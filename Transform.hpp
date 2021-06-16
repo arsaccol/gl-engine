@@ -10,6 +10,8 @@
 
 #include "Helper.hpp"
 
+#include "imgui.h"
+
 class Transform
 {
 public:
@@ -29,6 +31,22 @@ public:
 		: position{initialPosition}
 		, orientation{rotationEulerAngles}
 	{
+	}
+
+	void Debug()
+	{
+		using namespace ImGui;
+
+		BeginChild("Transform");
+			Begin("Position");
+				Text("x: %.6f y: %.6f %.6f", position.x, position.y, position.z);
+			End();
+
+			Begin("Orientation");
+				auto eulers = glm::degrees(glm::eulerAngles(orientation));
+				Text("Pitch: %3.6f Yaw: %3.5f Roll: %3.5f", eulers.x, eulers.y, eulers.z);
+			End();
+		EndChild();
 	}
 
 	glm::vec3 forward() const
