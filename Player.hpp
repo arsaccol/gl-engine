@@ -15,6 +15,8 @@
 
 #include "Helper.hpp"
 
+#include <imgui.h>
+
 
 template <typename EventSubType>
 std::function<void(const EventSubType&)> createEventHandler(const event::EventDispatcher::EventHandler& eh)
@@ -32,6 +34,8 @@ class Player
 {
 public:
 	Player();
+
+	void Debug();
 
 private:
 	void registerLookHandler();
@@ -60,6 +64,14 @@ Player::Player()
 {
 	registerLookHandler();
 	registerWalkHandler();
+}
+
+void Player::Debug()
+{
+	using namespace ImGui;
+	BeginChild("Player");
+		transform.Debug();
+	EndChild();
 }
 
 void Player::registerLookHandler()
@@ -129,7 +141,6 @@ void Player::registerWalkHandler()
 			//legacyWalkDirection = Camera::WalkDirection::STRAFE_RIGHT;
 			walkVector = glm::normalize(walkVector + transform.right());
 		}
-		printVector3("Walk vector: ", walkVector);
 
 
 		//transform.position
