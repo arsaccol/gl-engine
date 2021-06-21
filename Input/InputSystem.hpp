@@ -129,6 +129,12 @@ void Input::processInput(float deltaTime)
 		}
 	}
 
+	// Reset position if R is pressed
+	if (glfwGetKey(apiWindowPtr, GLFW_KEY_R) == GLFW_PRESS) {
+		CharacterResetPositionEvent resetPositionEvent;
+		SendEvent<CharacterResetPositionEvent>(resetPositionEvent);
+	}
+
 	if (glfwGetKey(apiWindowPtr, GLFW_KEY_W) == GLFW_PRESS) {
 		directionFlags |= WalkDirections::FORWARD;
 	}

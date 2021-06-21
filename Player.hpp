@@ -40,6 +40,7 @@ public:
 private:
 	void registerLookHandler();
 	void registerWalkHandler();
+	void registerResetHandlers();
 
 private:
 	// these should go in the transform and not here, but keep them commented out
@@ -64,6 +65,7 @@ Player::Player()
 {
 	registerLookHandler();
 	registerWalkHandler();
+	registerResetHandlers();
 }
 
 void Player::Debug()
@@ -150,4 +152,15 @@ void Player::registerWalkHandler()
 	};
 
 	eventDispatcher.On<CharacterWalkEvent>(walkHandler);
+}
+
+void Player::registerResetHandlers()
+{
+	auto& eventDispatcher = event::EventDispatcher::Instance();
+
+	auto resetPositionHandler = [&](const event::Event& e) {
+		transform.position = { 0, 0, 3.f };
+	};
+
+	eventDispatcher.On<CharacterResetPositionEvent>(resetPositionHandler);
 }
