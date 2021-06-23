@@ -39,7 +39,7 @@ public:
 
 		BeginChild("Transform");
 			Begin("Position");
-				Text("x: %.6f y: %.6f %.6f", position.x, position.y, position.z);
+				Text("x: %.6f y: %.6f z: %.6f", position.x, position.y, position.z);
 			End();
 
 			Begin("Orientation");
