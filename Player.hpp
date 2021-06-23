@@ -30,6 +30,8 @@ std::function<void(const EventSubType&)> createEventHandler(const event::EventDi
 
 // TODO: we move camera rotation logic out of the camera and into the player
 
+#include <imgui.h>
+
 class Player
 {
 public:
@@ -53,7 +55,7 @@ private:
 	float pitch = 0.f;
 	float yaw = 0.f;
 
-
+	glm::vec3 walkVector;
 public:
 	Camera camera{ glm::vec3{0, 0, 3}, glm::vec3{0, 0, -1} };
 	Transform transform{ {0, 0, 3}, {0, glm::radians(0.f), 0} };
@@ -73,6 +75,11 @@ void Player::Debug()
 	using namespace ImGui;
 	BeginChild("Player");
 		transform.Debug();
+
+		Begin("Walk vector");
+			Text("x: %.6f y: %.6f z: %.6f", walkVector.x, walkVector.y, walkVector.z);
+			Text("Magnitude: %.6f", glm::length(walkVector));
+		End();
 	EndChild();
 }
 
@@ -125,27 +132,29 @@ void Player::registerWalkHandler()
 
 		auto legacyWalkDirection = Camera::WalkDirection::NO_WALK;
 
-		glm::vec3 walkVector{ 0, 0, 0 };
+		walkVector = { 0, 0, 0 };
 
 		if (eventWalkDirection & WalkDirections::FORWARD) {
 			//legacyWalkDirection = Camera::WalkDirection::FORWARD;
-			walkVector = glm::normalize(walkVector + transform.forward());
+			walkVector = walkVector + transform.forward();
 		}
 		if (eventWalkDirection & WalkDirections::BACKWARD) {
 			//legacyWalkDirection = Camera::WalkDirection::BACKWARD;
-			walkVector = glm::normalize(walkVector + -transform.forward());
+			walkVector = walkVector + -transform.forward();
 		}
 		if (eventWalkDirection & WalkDirections::STRAFE_LEFT) {
 			//legacyWalkDirection = Camera::WalkDirection::STRAFE_LEFT;
-			walkVector = glm::normalize(walkVector + -transform.right());
+			walkVector = walkVector + -transform.right();
 		}
 		if (eventWalkDirection & WalkDirections::STRAFE_RIGHT) {
 			//legacyWalkDirection = Camera::WalkDirection::STRAFE_RIGHT;
-			walkVector = glm::normalize(walkVector + transform.right());
+			walkVector = walkVector + transform.right();
 		}
 
+		// normalize walk vector, but don't try to normalize zero vector
+		if (glm::length(walkVector) > FLT_EPSILON)
+			walkVector = glm::normalize(walkVector);
 
-		//transform.position
 		transform.position += walkVector * movementSpeed;
 
 		//camera.walk(legacyWalkDirection);
