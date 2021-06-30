@@ -30,6 +30,7 @@ class App
 	std::unique_ptr<ShaderProgram> shaderProgram;
 	std::unique_ptr<Mesh> triangleMesh;
 	std::unique_ptr<Mesh> cubeMesh;
+	std::unique_ptr<Mesh> loadedMesh;
 
 	Input input;
 
@@ -96,6 +97,9 @@ public:
 			}
 		);
 
+		//teapotMesh = std::make_unique<Mesh>("models/default-cube.obj");
+		loadedMesh = std::make_unique<Mesh>("D:\\3D\\better-human.obj");
+
 		ui.Init(windowObject.getAPIWindowPtr());
 
 		loop();
@@ -158,8 +162,9 @@ public:
 
 		shaderProgram->setMatrix4x4(view_projection, "MVP");
 
-		triangleMesh->draw(*shaderProgram);
-		cubeMesh->draw(*shaderProgram);
+		//triangleMesh->draw(*shaderProgram);
+		//cubeMesh->draw(*shaderProgram);
+		loadedMesh->draw(*shaderProgram);
 
 		player.Debug();
 

@@ -8,6 +8,10 @@
 
 #include <iostream>
 
+#include <string>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 class Mesh
 {
@@ -26,6 +30,42 @@ public:
 		, indices{ indices }
 		//, VAO{ 0 }, VBO{ 0 }, EBO{ 0 }
 	{
+		setupMesh();
+	}
+
+	// Model loading constructor
+	// only loads a single mesh, so I guess it's better suited for .obj files?
+	Mesh(const std::string& filename)
+	{
+		Assimp::Importer importer;
+		const aiScene* scene = importer.ReadFile(filename, aiProcess_Triangulate | aiProcess_FlipUVs);
+		const aiNode* rootNode = scene->mRootNode;
+
+		aiMesh* mesh = scene->mMeshes[0];
+
+		// copy vertices
+		for (size_t i = 0; i < mesh->mNumVertices; ++i)
+		{
+			Vertex vertex;
+			// do processing here
+			auto [x, y, z] = mesh->mVertices[i];
+			vertex.Position = glm::vec3{ x, y, z };
+			vertex.Color = glm::vec3{ 1 };
+
+			vertices.push_back(vertex);
+		}
+
+
+		// copy indices
+		for(size_t i = 0; i < mesh->mNumFaces; ++i)
+		{
+			aiFace face = mesh->mFaces[i];
+			for (size_t i = 0; i < face.mNumIndices; ++i)
+			{
+				indices.push_back(face.mIndices[i]);
+			}
+		}
+
 		setupMesh();
 	}
 
