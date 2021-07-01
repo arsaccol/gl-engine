@@ -38,7 +38,7 @@ public:
 	Mesh(const std::string& filename)
 	{
 		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile(filename, aiProcess_Triangulate | aiProcess_FlipUVs);
+		const aiScene* scene = importer.ReadFile(filename, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals);
 		const aiNode* rootNode = scene->mRootNode;
 
 		aiMesh* mesh = scene->mMeshes[0];
@@ -51,6 +51,13 @@ public:
 			auto [x, y, z] = mesh->mVertices[i];
 			vertex.Position = glm::vec3{ x, y, z };
 			vertex.Color = glm::vec3{ 1 };
+
+			// shouldn't test for every vertex... but this will do for now
+			// then again we're doing this on startup and not every frame
+			//if (mesh->HasNormals()) {
+				auto [nx, ny, nz] = mesh->mNormals[i];
+				vertex.Normal = glm::vec3{ nx, ny, nz };
+			//}
 
 			vertices.push_back(vertex);
 		}

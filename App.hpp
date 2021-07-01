@@ -97,8 +97,7 @@ public:
 			}
 		);
 
-		//teapotMesh = std::make_unique<Mesh>("models/default-cube.obj");
-		loadedMesh = std::make_unique<Mesh>("D:\\3D\\better-human.obj");
+		loadedMesh = std::make_unique<Mesh>("models/better-human.obj");
 
 		ui.Init(windowObject.getAPIWindowPtr());
 
