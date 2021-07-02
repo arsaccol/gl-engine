@@ -90,8 +90,12 @@ public:
 
 	const glm::mat4 getModelMatrix() const
 	{
-		//glm::quatLookAt()
+		//auto translation = glm::translate(glm::mat4{}, position);
+		//auto rotation = glm::rotate(translation);
+		glm::mat4 translation = glm::translate(glm::identity<glm::mat4>(), position);
+		glm::mat4 rotation = glm::toMat4(orientation);
 
+		return rotation * translation;
 	}
 
 };

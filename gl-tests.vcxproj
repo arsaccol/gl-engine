@@ -161,6 +161,8 @@
     <ClInclude Include="Mesh.hpp" />
     <ClInclude Include="Event\Observable.hpp" />
     <ClInclude Include="Player.hpp" />
+    <ClInclude Include="RenderSystem.hpp" />
+    <ClInclude Include="Scene.hpp" />
     <ClInclude Include="Shader.hpp" />
     <ClInclude Include="Transform.hpp" />
     <ClInclude Include="UI\ui.hpp" />
