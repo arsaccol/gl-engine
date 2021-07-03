@@ -6,6 +6,8 @@
 #include "Shader.hpp"
 #include "Player.hpp"
 
+#include <cstdlib>
+
 class Scene
 {
 public:
@@ -42,7 +44,16 @@ void Scene::setup()
 	registry.emplace<Mesh>(humanEntity, "models/better-human.obj");
 	registry.emplace<Transform>(humanEntity);
 
-	setupCube(glm::vec3{ 1.5, 0.5, 0 });
+
+	for (int i = 0; i < 500; ++i)
+	{
+		setupCube(glm::vec3{
+			static_cast<float>(rand() % 100 - 50),
+			static_cast<float>(rand() % 100 - 50),
+			static_cast<float>(rand() % 100 - 50),
+		});
+
+	}
 }
 
 void Scene::setupCube(const glm::vec3& position)

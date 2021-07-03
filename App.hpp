@@ -1,5 +1,8 @@
 #pragma once
 
+#include <chrono>
+#include <string>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -58,11 +61,15 @@ public:
 		{
 			deltaTime = glfwGetTime() - lastFrameTime; 
 			
-			//glfwSetWindowTitle(windowObject.getAPIWindowPtr(), std::to_string(1 / deltaTime).c_str());
-			
 			input.processInput(deltaTime);
 
+			auto start = std::chrono::high_resolution_clock::now();
+
 			render();
+
+			auto end = std::chrono::high_resolution_clock::now();
+			std::chrono::duration<double, std::milli> render_time = end - start;
+			glfwSetWindowTitle(windowObject.getAPIWindowPtr(), (std::string( "Render time: " ) + std::to_string(render_time.count()) + " ms").c_str());
 
 			lastFrameTime = glfwGetTime();
 		}
