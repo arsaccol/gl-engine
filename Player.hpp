@@ -99,16 +99,6 @@ void Player::registerLookHandler()
 
 		const glm::vec3 radianEulers = glm::eulerAngles(transform.orientation);
 		glm::vec3 degreeEulers = glm::degrees(radianEulers);
-
-		//printVector3("Right vector coordinates", transform.right());
-
-
-		printVector3("Transform Eulers (radians)", radianEulers * glm::pi<float>());
-		printVector3("Transform Eulers (degrees):", degreeEulers);
-
-		// we're trying to implement correctly this now
-		// hopefully
-		//transform.mouseRotation(lookEvent.LookDirection, mouselookSensitivity);
 	};
 
 	eventDispatcher.On<CharacterLookEvent>(cameraLookHandler);
