@@ -16,11 +16,13 @@ public:
 	void update();
 	void render(const int windowWidth, const int windowHeight);
 private: 
-	void setupCube(const glm::vec3& position);
+	void setupCubeMesh();
 
 private:
 	entt::registry registry;
 
+	std::shared_ptr<Mesh> humanMesh;
+	std::shared_ptr<Mesh> cubeMesh;
 	Player player;
 	std::unique_ptr<ShaderProgram> shaderProgram;
 };
@@ -40,28 +42,34 @@ void Scene::setup()
 	// As it is right now, the registry recreates the same meshes for each entity, which is definitely 
 	// not desirable lol
 
-	auto humanEntity = registry.create();
-	registry.emplace<Mesh>(humanEntity, "models/better-human.obj");
-	registry.emplace<Transform>(humanEntity);
+	humanMesh = std::make_shared<Mesh>("models/better-human.obj");
+	setupCubeMesh();
 
+	auto humanEntity = registry.create();
+	//registry.emplace<Mesh>(humanEntity, "models/better-human.obj");
+	registry.emplace<std::shared_ptr<Mesh>>(humanEntity, humanMesh);
+	registry.emplace<Transform>(humanEntity);
 
 	for (int i = 0; i < 500; ++i)
 	{
-		setupCube(glm::vec3{
-			static_cast<float>(rand() % 100 - 50),
-			static_cast<float>(rand() % 100 - 50),
-			static_cast<float>(rand() % 100 - 50),
-		});
+		auto newCubeEntity = registry.create();
+		registry.emplace<Transform>(newCubeEntity, 
+			glm::vec3{
+				static_cast<float>(rand() % 100 - 50),
+				static_cast<float>(rand() % 100 - 50),
+				static_cast<float>(rand() % 100 - 50),
+			}
+		);
 
+		registry.emplace<std::shared_ptr<Mesh>>(newCubeEntity, cubeMesh);
 	}
 }
 
-void Scene::setupCube(const glm::vec3& position)
+void Scene::setupCubeMesh()
 {
 	// this is wrong, we're creating one mesh for each cube
 	// instead, we should 
-	auto cubeEntity = registry.create();
-	registry.emplace<Mesh>(cubeEntity,
+	cubeMesh = std::make_shared<Mesh>(
 		std::vector{
 			// front
 			Vertex{{-.5f, -.5f, .5f}, {0.f, 0.f},  {1.f, 0.f, 0.f}},
@@ -76,7 +84,7 @@ void Scene::setupCube(const glm::vec3& position)
 		},
 		// indices for index buffer
 		std::vector<unsigned int>{
-			// front
+		// front
 			0, 1, 2,
 			2, 3, 0,
 			// right
@@ -96,8 +104,6 @@ void Scene::setupCube(const glm::vec3& position)
 			6, 7, 3
 		}
 	);
-
-	registry.emplace<Transform>(cubeEntity, position);
 }
 
 
@@ -119,18 +125,14 @@ void Scene::render(const int windowWidth, const int windowHeight)
 	glm::mat4 projection = glm::perspective<float>(glm::radians(60.f), (float)windowWidth / (float)windowHeight, 1.f, 100.f);
 	glm::mat4 view_projection =  projection * view;
 
-	auto renderView = registry.view<Transform, Mesh>();
-	for (auto& renderEntity : renderView)
-	{
-		auto& mesh = renderView.get<Mesh>(renderEntity);
-		auto& transform = renderView.get<Transform>(renderEntity);
-
-		auto modelMatrix = transform.getModelMatrix();
-
-		glm::mat4 mvp = view_projection * modelMatrix;
-		shaderProgram->setMatrix4x4(mvp, "MVP");
-		mesh.draw(*shaderProgram);
-	}
+	registry.view <Transform, std::shared_ptr<Mesh>>().each(
+		[&](const Transform& transform, const std::shared_ptr<Mesh>& mesh_ptr) {
+			glm::mat4 modelMatrix = transform.getModelMatrix();
+			glm::mat4 mvp = view_projection * modelMatrix;
+			shaderProgram->setMatrix4x4(mvp, "MVP");
+			mesh_ptr->draw(*shaderProgram);
+		}
+	);
 
 	player.Debug();
 }
