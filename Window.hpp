@@ -56,7 +56,9 @@ private:
 		glfwInit();
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-		apiWindow = glfwCreateWindow(windowWidth, windowHeight, title.c_str(), nullptr, nullptr);
+		glfwWindowHint(GLFW_DOUBLEBUFFER, GL_FALSE);
+		//apiWindow = glfwCreateWindow(windowWidth, windowHeight, title.c_str(), nullptr, nullptr);
+		apiWindow = glfwCreateWindow(windowWidth, windowHeight, title.c_str(), glfwGetPrimaryMonitor(), nullptr);
 
 		if (apiWindow == nullptr) {
 			glfwTerminate();

@@ -68,8 +68,8 @@ public:
 			render();
 
 			auto end = std::chrono::high_resolution_clock::now();
-			std::chrono::duration<double, std::milli> render_time = end - start;
-			glfwSetWindowTitle(windowObject.getAPIWindowPtr(), (std::string( "Render time: " ) + std::to_string(render_time.count()) + " ms").c_str());
+			render_time = end - start;
+			//glfwSetWindowTitle(windowObject.getAPIWindowPtr(), (std::string( "Render time: " ) + std::to_string(render_time.count()) + " ms").c_str());
 
 			lastFrameTime = glfwGetTime();
 		}
@@ -82,9 +82,17 @@ public:
 
 		ui.BeginFrame();
 		scene.render(windowWidth, windowHeight);
+
+		ImGui::Begin("Frame time");
+		ImGui::Text("Render time: %lf   FPS: %lf", render_time, 1 / render_time.count() * 1000);
+		ImGui::End();
+
 		ui.EndFrame();
 
-		glfwSwapBuffers(windowObject.getAPIWindowPtr());
+		// legend has it that glFlush should be used "in production" for better performance,
+		// as glFlush returns immediately whereas glFinish blocks until render is complete
+		glFinish();
+		//glfwSwapBuffers(windowObject.getAPIWindowPtr());
 	}
 
 
@@ -95,6 +103,9 @@ public:
 
 	const int windowWidth = 1920;
 	const int windowHeight = 1080;
+
+	std::chrono::duration<double, std::milli> render_time{};
+
 
 	double deltaTime;
 	double lastFrameTime;
