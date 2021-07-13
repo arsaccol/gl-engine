@@ -151,6 +151,7 @@
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="stb_include.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.hpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="RenderSystem.hpp" />
     <ClInclude Include="Scene.hpp" />
     <ClInclude Include="Shader.hpp" />
+    <ClInclude Include="Texture.hpp" />
     <ClInclude Include="Transform.hpp" />
     <ClInclude Include="UI\ui.hpp" />
     <ClInclude Include="Vertex.hpp" />

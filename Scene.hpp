@@ -8,6 +8,7 @@
 #include "Player.hpp"
 
 #include "RenderSystem.hpp"
+#include "Texture.hpp"
 
 
 class Scene
@@ -25,6 +26,9 @@ private:
 	entt::registry registry;
 
 	std::shared_ptr<Mesh> humanMesh;
+	std::shared_ptr<Texture> humanTexture;
+	std::shared_ptr<Texture> testTexture;
+	std::shared_ptr<Mesh> blenderCubeMesh;
 	std::shared_ptr<Mesh> cubeMesh;
 	Player player;
 	std::unique_ptr<ShaderProgram> shaderProgram;
@@ -48,11 +52,16 @@ void Scene::setup()
 	// and have registry entities contain references to those
 
 	humanMesh = std::make_shared<Mesh>("models/better-human.obj");
-	setupCubeMesh();
+	blenderCubeMesh = std::make_shared<Mesh>("models/blender-cube.obj");
+	humanTexture = std::make_shared<Texture>("models/better-humanTexture.jpg");
+	testTexture = std::make_shared<Texture>("models/test-texture.jpg");
 
 	auto humanEntity = registry.create();
 	registry.emplace<std::shared_ptr<Mesh>>(humanEntity, humanMesh);
 	registry.emplace<Transform>(humanEntity);
+	registry.emplace<std::shared_ptr<Texture>>(humanEntity, humanTexture);
+
+	setupCubeMesh();
 
 	for (int i = 0; i < 500; ++i)
 	{
@@ -65,7 +74,8 @@ void Scene::setup()
 			}
 		);
 
-		registry.emplace<std::shared_ptr<Mesh>>(newCubeEntity, cubeMesh);
+		registry.emplace<std::shared_ptr<Mesh>>(newCubeEntity, blenderCubeMesh);
+		registry.emplace<std::shared_ptr<Texture>>(newCubeEntity, testTexture);
 	}
 }
 

@@ -59,6 +59,15 @@ public:
 				vertex.Normal = glm::vec3{ nx, ny, nz };
 			//}
 
+			if (mesh->mTextureCoords[0])
+			{
+				auto [x, y, z] = mesh->mTextureCoords[0][i];
+
+				vertex.TextureCoordinates = glm::vec2{ x, y };
+			}
+			else
+				vertex.TextureCoordinates = glm::vec2{ 0, 0 };
+
 			vertices.push_back(vertex);
 		}
 

@@ -10,6 +10,7 @@
       },
       "glm",
       "entt",
-      "assimp"
+      "assimp",
+      "stb"
     ]
 }

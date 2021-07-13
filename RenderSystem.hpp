@@ -6,6 +6,7 @@
 #include "Transform.hpp"
 #include "Mesh.hpp"
 #include "Shader.hpp"
+#include "Texture.hpp"
 
 
 
@@ -29,12 +30,18 @@ RenderSystem::RenderSystem(entt::registry& registry)
 void RenderSystem::DrawScene(const glm::mat4& viewProjectionMatrix, ShaderProgram& shaderProgram, int screenWidth, int screenHeight)
 {
 	// for now we simply draw all meshes
-	registry.view <Transform, std::shared_ptr<Mesh>>().each(
-		[&](const Transform& transform, const std::shared_ptr<Mesh>& mesh_ptr) {
+
+	// CHANGE: draw textured
+	registry.view <Transform, std::shared_ptr<Mesh>, std::shared_ptr<Texture>>().each(
+		[&](const Transform& transform, const std::shared_ptr<Mesh>& mesh_ptr, const std::shared_ptr<Texture>& texture_ptr) {
+
+
 			glm::mat4 modelMatrix = transform.getModelMatrix();
 			glm::mat4 mvp = viewProjectionMatrix * modelMatrix;
 			shaderProgram.setMatrix4x4(mvp, "MVP");
+			texture_ptr->bind();
 			mesh_ptr->draw(shaderProgram);
+			texture_ptr->unbind();
 		}
 	);
 }
