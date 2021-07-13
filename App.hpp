@@ -7,7 +7,6 @@
 #include <GLFW/glfw3.h>
 
 #include <GL/GL.h>
-#include <glm/glm.hpp>
 
 #include "Window.hpp"
 #include "Input/InputSystem.hpp"
