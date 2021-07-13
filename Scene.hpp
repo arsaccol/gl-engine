@@ -1,17 +1,20 @@
 #pragma once
 
+#include <cstdlib>
 #include <entt/entt.hpp>
 #include "./Transform.hpp"
 #include "Mesh.hpp"
 #include "Shader.hpp"
 #include "Player.hpp"
 
-#include <cstdlib>
+#include "RenderSystem.hpp"
+
 
 class Scene
 {
 public:
 	void setup();
+	entt::registry& getRegistry();
 
 	void update();
 	void render(const int windowWidth, const int windowHeight);
@@ -25,6 +28,8 @@ private:
 	std::shared_ptr<Mesh> cubeMesh;
 	Player player;
 	std::unique_ptr<ShaderProgram> shaderProgram;
+
+	std::unique_ptr<RenderSystem> renderer;
 };
 
 void Scene::setup()
@@ -34,19 +39,18 @@ void Scene::setup()
 		{GL_FRAGMENT_SHADER, "fragment_shader.frag"},
 	});
 
+	renderer = std::make_unique<RenderSystem>(registry);
+
 	printGLError("After shader setup");
 
 	// TODO: create resource manager classes, for meshes, textures, audio, shaders, etc.
 	// good example would be like in the SFML book: ResourceManager<Texture> resMgr, then load stuff from files,
 	// and have registry entities contain references to those
-	// As it is right now, the registry recreates the same meshes for each entity, which is definitely 
-	// not desirable lol
 
 	humanMesh = std::make_shared<Mesh>("models/better-human.obj");
 	setupCubeMesh();
 
 	auto humanEntity = registry.create();
-	//registry.emplace<Mesh>(humanEntity, "models/better-human.obj");
 	registry.emplace<std::shared_ptr<Mesh>>(humanEntity, humanMesh);
 	registry.emplace<Transform>(humanEntity);
 
@@ -63,6 +67,11 @@ void Scene::setup()
 
 		registry.emplace<std::shared_ptr<Mesh>>(newCubeEntity, cubeMesh);
 	}
+}
+
+entt::registry& Scene::getRegistry()
+{
+	return registry;
 }
 
 void Scene::setupCubeMesh()
@@ -119,20 +128,10 @@ void Scene::render(const int windowWidth, const int windowHeight)
 
 	glm::mat4 view = glm::lookAt(position, position + forward, up);
 
-	
-
-
 	glm::mat4 projection = glm::perspective<float>(glm::radians(60.f), (float)windowWidth / (float)windowHeight, 1.f, 100.f);
 	glm::mat4 view_projection =  projection * view;
 
-	registry.view <Transform, std::shared_ptr<Mesh>>().each(
-		[&](const Transform& transform, const std::shared_ptr<Mesh>& mesh_ptr) {
-			glm::mat4 modelMatrix = transform.getModelMatrix();
-			glm::mat4 mvp = view_projection * modelMatrix;
-			shaderProgram->setMatrix4x4(mvp, "MVP");
-			mesh_ptr->draw(*shaderProgram);
-		}
-	);
+	renderer->DrawScene(view_projection, *shaderProgram, windowWidth, windowHeight);
 
 	player.Debug();
 }
