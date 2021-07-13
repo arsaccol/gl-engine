@@ -1,0 +1,15 @@
+{
+    "name": "gl-engine",
+    "version": "0.0.1",
+    "dependencies": [
+      "glfw3",
+      "glad",
+      {
+        "name": "imgui",
+        "features": [ "glfw-binding", "opengl3-glad-binding" ]
+      },
+      "glm",
+      "entt",
+      "assimp"
+    ]
+}

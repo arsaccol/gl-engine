@@ -2,3 +2,5 @@ Debug/
 Release/
 .vs/
 imgui.ini
+vcpkg_installed/
+

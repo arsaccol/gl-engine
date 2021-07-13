@@ -103,5 +103,6 @@
     <None Include="vertex_shader.vert">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="vcpkg.json" />
   </ItemGroup>
 </Project>
