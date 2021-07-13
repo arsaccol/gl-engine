@@ -23,6 +23,7 @@ private:
 RenderSystem::RenderSystem(entt::registry& registry)
 	: registry{ registry }
 {
+	glEnable(GL_CULL_FACE);
 }
 
 // for now we pass a ShaderProgram, but I'm not sure if it should be setup in the RenderSystem in a
