@@ -34,14 +34,9 @@ private:
 
 
 
-	std::shared_ptr<Mesh> humanMesh;
-	std::shared_ptr<Texture> humanTexture;
-	std::shared_ptr<Texture> testTexture;
-	std::shared_ptr<Mesh> blenderCubeMesh;
 	std::shared_ptr<Mesh> cubeMesh;
 	Player player;
 	std::unique_ptr<ShaderProgram> shaderProgram;
-
 	std::unique_ptr<RenderSystem> renderer;
 };
 
