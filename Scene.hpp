@@ -10,6 +10,8 @@
 #include "RenderSystem.hpp"
 #include "Texture.hpp"
 
+#include "ResourceManager.hpp"
+#include "Prefabs/Factory.hpp"
 
 class Scene
 {
@@ -21,9 +23,16 @@ public:
 	void render(const int windowWidth, const int windowHeight);
 private: 
 	void setupCubeMesh();
+	void loadResources();
 
 private:
 	entt::registry registry;
+
+	TextureManagerType& textureManager{ ResourceManager::textureManager };
+	MeshManagerType& meshManager{ ResourceManager::meshManager };
+	Factory factory;
+
+
 
 	std::shared_ptr<Mesh> humanMesh;
 	std::shared_ptr<Texture> humanTexture;
@@ -41,41 +50,21 @@ void Scene::setup()
 	shaderProgram = std::make_unique<ShaderProgram>(ShaderProgram::ShaderTargetFilenamePairs{
 		{GL_VERTEX_SHADER, "vertex_shader.vert"},
 		{GL_FRAGMENT_SHADER, "fragment_shader.frag"},
-	});
+		});
 
 	renderer = std::make_unique<RenderSystem>(registry);
 
 	printGLError("After shader setup");
 
-	// TODO: create resource manager classes, for meshes, textures, audio, shaders, etc.
-	// good example would be like in the SFML book: ResourceManager<Texture> resMgr, then load stuff from files,
-	// and have registry entities contain references to those
+	loadResources();
 
-	humanMesh = std::make_shared<Mesh>("models/better-human.obj");
-	blenderCubeMesh = std::make_shared<Mesh>("models/blender-cube.obj");
-	humanTexture = std::make_shared<Texture>("models/better-humanTexture.jpg");
-	testTexture = std::make_shared<Texture>("models/test-texture.jpg");
+	factory.Human(registry);
 
-	auto humanEntity = registry.create();
-	registry.emplace<std::shared_ptr<Mesh>>(humanEntity, humanMesh);
-	registry.emplace<Transform>(humanEntity);
-	registry.emplace<std::shared_ptr<Texture>>(humanEntity, humanTexture);
-
-	setupCubeMesh();
+	//setupCubeMesh();
 
 	for (int i = 0; i < 500; ++i)
 	{
-		auto newCubeEntity = registry.create();
-		registry.emplace<Transform>(newCubeEntity, 
-			glm::vec3{
-				static_cast<float>(rand() % 100 - 50),
-				static_cast<float>(rand() % 100 - 50),
-				static_cast<float>(rand() % 100 - 50),
-			}
-		);
-
-		registry.emplace<std::shared_ptr<Mesh>>(newCubeEntity, blenderCubeMesh);
-		registry.emplace<std::shared_ptr<Texture>>(newCubeEntity, testTexture);
+		factory.BlenderCube(registry);
 	}
 }
 
@@ -83,6 +72,15 @@ entt::registry& Scene::getRegistry()
 {
 	return registry;
 }
+
+void Scene::loadResources()
+{
+	meshManager.emplace("human", std::make_shared<Mesh>("models/better-human.obj"));
+	textureManager.emplace("human", std::make_shared<Texture>("models/better-humanTexture.jpg"));
+	meshManager.emplace("cube", std::make_shared<Mesh>("models/blender-cube.obj"));
+	textureManager.emplace("cube", std::make_shared<Texture>("models/test-texture.jpg"));
+}
+
 
 void Scene::setupCubeMesh()
 {
