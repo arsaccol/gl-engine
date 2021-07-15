@@ -112,12 +112,12 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="fragment_shader.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="vertex_shader.vert">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="vcpkg.json" />
+    <None Include="basic_fragment_shader.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="basic_vertex_shader.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
