@@ -70,6 +70,36 @@ public:
 		//return { 1, 0, 0 };
 	}
 
+	glm::vec3 translateLocal(const glm::vec3 translation)
+	{
+		position += glm::rotate(orientation, translation);
+		return position;
+	}
+
+	glm::vec3 translateLocal(float x, float y, float z)
+	{
+		glm::vec3 absoluteTranslation = glm::vec3{ x, y, z };
+		position += glm::rotate(orientation, absoluteTranslation);
+
+		return position;
+	}
+
+
+	glm::vec3 translate(const glm::vec3& translation)
+	{
+		position += translation;
+		return position;
+	}
+
+	glm::vec3 translate(float x, float y, float z)
+	{
+		position.x += x;
+		position.y += y;
+		position.z += z;
+
+		return position;
+	}
+
 
 	glm::quat rotateAroundAxis(float angleRadians, glm::vec3 axis)
 	{
@@ -95,7 +125,8 @@ public:
 		glm::mat4 translation = glm::translate(glm::identity<glm::mat4>(), position);
 		glm::mat4 rotation = glm::toMat4(orientation);
 
-		return rotation * translation;
+		//return rotation * translation;
+		return translation * rotation;
 	}
 
 };
