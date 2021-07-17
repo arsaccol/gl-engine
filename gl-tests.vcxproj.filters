@@ -113,11 +113,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="vcpkg.json" />
-    <None Include="basic_fragment_shader.frag">
+    <None Include="shaders\basic_fragment_shader.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="basic_vertex_shader.vert">
+    <None Include="shaders\basic_vertex_shader.vert">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="shaders\diffuse_lighting_shader.vert" />
+    <None Include="shaders\diffuse_lighting_shader.frag" />
   </ItemGroup>
 </Project>

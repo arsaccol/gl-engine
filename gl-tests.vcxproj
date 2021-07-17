@@ -179,9 +179,11 @@
     <ClInclude Include="Window.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="basic_fragment_shader.frag" />
+    <None Include="shaders\basic_fragment_shader.frag" />
+    <None Include="shaders\diffuse_lighting_shader.frag" />
+    <None Include="shaders\diffuse_lighting_shader.vert" />
     <None Include="vcpkg.json" />
-    <None Include="basic_vertex_shader.vert" />
+    <None Include="shaders\basic_vertex_shader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

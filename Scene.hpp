@@ -43,8 +43,8 @@ private:
 void Scene::setup()
 {
 	shaderProgram = std::make_unique<ShaderProgram>(ShaderProgram::ShaderTargetFilenamePairs{
-		{GL_VERTEX_SHADER, "basic_vertex_shader.vert"},
-		{GL_FRAGMENT_SHADER, "basic_fragment_shader.frag"},
+		{GL_VERTEX_SHADER, "shaders/diffuse_lighting_shader.vert"},
+		{GL_FRAGMENT_SHADER, "shaders/diffuse_lighting_shader.frag"},
 		});
 
 	renderer = std::make_unique<RenderSystem>(registry);

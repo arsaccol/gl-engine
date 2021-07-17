@@ -22,7 +22,7 @@ class Mesh
 		Position = 0,
 		TextureCoordinates = 1,
 		Color = 2,
-		//Normal = 3
+		Normal = 3
 	};
 public:
 	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
@@ -127,8 +127,8 @@ public:
 		glEnableVertexAttribArray(Attributes::Color);
 
 		// setup Normal attribute
-		//glVertexAttribPointer(Attributes::Normal, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
-		//glEnableVertexAttribArray(Attributes::Normal);
+		glVertexAttribPointer(Attributes::Normal, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+		glEnableVertexAttribArray(Attributes::Normal);
 
 
 		glBindVertexArray(0);
