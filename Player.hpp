@@ -58,7 +58,7 @@ private:
 	glm::vec3 walkVector;
 public:
 	Camera camera{ glm::vec3{0, 0, 3}, glm::vec3{0, 0, -1} };
-	Transform transform{ {0, 0, 3}, {0, glm::radians(0.f), 0} };
+	Transform transform{ {0, 1.7, 3}, {0, glm::radians(0.f), 0} };
 
 
 };
@@ -145,7 +145,9 @@ void Player::registerWalkHandler()
 		if (glm::length(walkVector) > FLT_EPSILON)
 			walkVector = glm::normalize(walkVector);
 
-		transform.position += walkVector * movementSpeed;
+		//transform.position += walkVector * movementSpeed;
+		float x = walkVector.x; float z = walkVector.z;
+		transform.translate(glm::vec3{ x, 0, z } * movementSpeed);
 
 		//camera.walk(legacyWalkDirection);
 	};

@@ -53,7 +53,12 @@ void Scene::setup()
 
 	loadResources();
 
-	factory.Human(registry);
+	auto humanID = factory.Human(registry);
+	Transform& humanTransform = registry.get<Transform>(humanID);
+	humanTransform.rotateAroundAxis(glm::radians(45.f), { 0, 1, 0 });
+	//humanTransform.translateLocal(0, 0, -10);
+	humanTransform.translate(0, 0, 5);
+
 
 	//setupCubeMesh();
 
