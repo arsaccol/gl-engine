@@ -32,16 +32,20 @@ private:
 	MeshManagerType& meshManager{ ResourceManager::meshManager };
 	Factory factory;
 
-
+	Player player{ registry };
+	entt::entity playerEntity;
+	std::shared_ptr<Transform> playerTransform;
 
 	std::shared_ptr<Mesh> cubeMesh;
-	Player player;
 	std::unique_ptr<ShaderProgram> shaderProgram;
 	std::unique_ptr<RenderSystem> renderer;
 };
 
 void Scene::setup()
 {
+	playerEntity = player.getEntity();
+	playerTransform = registry.get<std::shared_ptr<Transform>>(playerEntity);
+
 	shaderProgram = std::make_unique<ShaderProgram>(ShaderProgram::ShaderTargetFilenamePairs{
 		{GL_VERTEX_SHADER, "shaders/diffuse_lighting_shader.vert"},
 		{GL_FRAGMENT_SHADER, "shaders/diffuse_lighting_shader.frag"},
@@ -130,9 +134,9 @@ void Scene::update()
 
 void Scene::render(const int windowWidth, const int windowHeight)
 {
-	glm::vec3 position = player.transform.position;
-	glm::vec3 forward = player.transform.forward();
-	glm::vec3 up = player.transform.up();
+	glm::vec3 position = playerTransform->position;
+	glm::vec3 forward = playerTransform->forward();
+	glm::vec3 up = playerTransform->up();
 
 	glm::mat4 view = glm::lookAt(position, position + forward, up);
 

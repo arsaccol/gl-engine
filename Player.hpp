@@ -16,6 +16,7 @@
 #include "Helper.hpp"
 
 #include <imgui.h>
+#include <entt/entt.hpp>
 
 
 template <typename EventSubType>
@@ -35,7 +36,7 @@ std::function<void(const EventSubType&)> createEventHandler(const event::EventDi
 class Player
 {
 public:
-	Player();
+	Player(entt::registry& registry);
 
 	void Debug();
 
@@ -48,6 +49,11 @@ private:
 	// these should go in the transform and not here, but keep them commented out
 	//glm::vec3 position;
 	//glm::quat rotation;
+	entt::registry& registry;
+
+	entt::entity playerEntity;
+	std::shared_ptr<Transform> transform;
+	
 
 	float mouselookSensitivity{ 5.f };
 	float movementSpeed{ .1f };
@@ -58,13 +64,26 @@ private:
 	glm::vec3 walkVector;
 public:
 	Camera camera{ glm::vec3{0, 0, 3}, glm::vec3{0, 0, -1} };
-	Transform transform{ {0, 1.7, 3}, {0, glm::radians(0.f), 0} };
-
+	entt::entity getEntity() 
+	{
+		return playerEntity;
+	}
+	//Transform transform{ {0, 1.7, 3}, {0, glm::radians(0.f), 0} };
 
 };
 
-Player::Player()
+Player::Player(entt::registry& registry)
+	: registry{ registry }
 {
+	playerEntity = registry.create();
+	registry.emplace<std::shared_ptr<Transform>>(
+		playerEntity, 
+		std::make_shared<Transform>(glm::vec3{ 0, 1.65, 3 }, 
+		glm::vec3{ 0, glm::radians(0.f), 0 }
+	));
+
+	transform = registry.get<std::shared_ptr<Transform>>(playerEntity);
+
 	registerLookHandler();
 	registerWalkHandler();
 	registerResetHandlers();
@@ -74,7 +93,7 @@ void Player::Debug()
 {
 	using namespace ImGui;
 	BeginChild("Player");
-		transform.Debug();
+		transform->Debug();
 
 		Begin("Walk vector");
 			Text("x: %.6f y: %.6f z: %.6f", walkVector.x, walkVector.y, walkVector.z);
@@ -93,11 +112,11 @@ void Player::registerLookHandler()
 
 		camera.mouseLook(lookEvent.LookDirection);
 
-		transform.rotateAroundAxis(lookEvent.LookDirection.x * -.001f * mouselookSensitivity , { 0, 1, 0 });
-		transform.rotateAroundAxis(lookEvent.LookDirection.y * -.001f * mouselookSensitivity , transform.right());
+		transform->rotateAroundAxis(lookEvent.LookDirection.x * -.001f * mouselookSensitivity , { 0, 1, 0 });
+		transform->rotateAroundAxis(lookEvent.LookDirection.y * -.001f * mouselookSensitivity , transform->right());
 
 
-		const glm::vec3 radianEulers = glm::eulerAngles(transform.orientation);
+		const glm::vec3 radianEulers = glm::eulerAngles(transform->orientation);
 		glm::vec3 degreeEulers = glm::degrees(radianEulers);
 	};
 
@@ -126,19 +145,19 @@ void Player::registerWalkHandler()
 
 		if (eventWalkDirection & WalkDirections::FORWARD) {
 			//legacyWalkDirection = Camera::WalkDirection::FORWARD;
-			walkVector = walkVector + transform.forward();
+			walkVector = walkVector + transform->forward();
 		}
 		if (eventWalkDirection & WalkDirections::BACKWARD) {
 			//legacyWalkDirection = Camera::WalkDirection::BACKWARD;
-			walkVector = walkVector + -transform.forward();
+			walkVector = walkVector + -transform->forward();
 		}
 		if (eventWalkDirection & WalkDirections::STRAFE_LEFT) {
 			//legacyWalkDirection = Camera::WalkDirection::STRAFE_LEFT;
-			walkVector = walkVector + -transform.right();
+			walkVector = walkVector + -transform->right();
 		}
 		if (eventWalkDirection & WalkDirections::STRAFE_RIGHT) {
 			//legacyWalkDirection = Camera::WalkDirection::STRAFE_RIGHT;
-			walkVector = walkVector + transform.right();
+			walkVector = walkVector + transform->right();
 		}
 
 		// normalize walk vector, but don't try to normalize zero vector
@@ -147,7 +166,7 @@ void Player::registerWalkHandler()
 
 		//transform.position += walkVector * movementSpeed;
 		float x = walkVector.x; float z = walkVector.z;
-		transform.translate(glm::vec3{ x, 0, z } * movementSpeed);
+		transform->translate(glm::vec3{ x, 0, z } * movementSpeed);
 
 		//camera.walk(legacyWalkDirection);
 	};
@@ -160,7 +179,7 @@ void Player::registerResetHandlers()
 	auto& eventDispatcher = event::EventDispatcher::Instance();
 
 	auto resetPositionHandler = [&](const event::Event& e) {
-		transform.position = { 0, 0, 3.f };
+		transform->position = { 0, 0, 3.f };
 	};
 
 	eventDispatcher.On<CharacterResetPositionEvent>(resetPositionHandler);
