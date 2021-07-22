@@ -36,19 +36,29 @@ std::function<void(const EventSubType&)> createEventHandler(const event::EventDi
 class Player
 {
 public:
+	struct PlayerParams
+	{
+		float mouseLookSensitivity{ 5 };
+		float movementSpeed{ .1f };
+		float pitch{ 0 };
+		float yaw{ 0 };
+	};
+
+
+public:
+	// upon construction, creates a player entity in the registry,
+	// emplacing a transform, some PlayerParams, and a Camera (not done yet)
+	// Camera is dependent upon player's Transform, and only carries "config" info such as FOV and whatnot
 	Player(entt::registry& registry);
 
 	void Debug();
-
 private:
+	entt::entity makePlayerEntity(const glm::vec3& position, const glm::vec3& rotationEulerAngles);
 	void registerLookHandler();
 	void registerWalkHandler();
 	void registerResetHandlers();
 
 private:
-	// these should go in the transform and not here, but keep them commented out
-	//glm::vec3 position;
-	//glm::quat rotation;
 	entt::registry& registry;
 
 	entt::entity playerEntity;
@@ -63,30 +73,33 @@ private:
 
 	glm::vec3 walkVector;
 public:
-	Camera camera{ glm::vec3{0, 0, 3}, glm::vec3{0, 0, -1} };
+	//Camera camera{ glm::vec3{0, 0, 3}, glm::vec3{0, 0, -1} };
 	entt::entity getEntity() 
 	{
 		return playerEntity;
 	}
-	//Transform transform{ {0, 1.7, 3}, {0, glm::radians(0.f), 0} };
 
 };
 
 Player::Player(entt::registry& registry)
 	: registry{ registry }
 {
-	playerEntity = registry.create();
-	registry.emplace<std::shared_ptr<Transform>>(
-		playerEntity, 
-		std::make_shared<Transform>(glm::vec3{ 0, 1.65, 3 }, 
-		glm::vec3{ 0, glm::radians(0.f), 0 }
-	));
-
-	transform = registry.get<std::shared_ptr<Transform>>(playerEntity);
+	makePlayerEntity(glm::vec3{ 0, 1.65, 3 }, glm::vec3{ 0, glm::radians(0.f), 0 });
 
 	registerLookHandler();
 	registerWalkHandler();
 	registerResetHandlers();
+}
+
+entt::entity Player::makePlayerEntity(const glm::vec3& position, const glm::vec3& rotationEulerAngles)
+{
+	playerEntity = registry.create();
+	registry.emplace<PlayerParams>(playerEntity);
+
+	transform = registry.emplace<std::shared_ptr<Transform>>(playerEntity, 
+		std::make_shared<Transform>(position, rotationEulerAngles));
+
+	return playerEntity;
 }
 
 void Player::Debug()
@@ -108,13 +121,9 @@ void Player::registerLookHandler()
 
 	auto cameraLookHandler = [&](const event::Event& e) {
 		const auto& lookEvent = dynamic_cast<const CharacterLookEvent&>(e);
-		//printVector2("lookEvent.LookDirection", lookEvent.LookDirection);
-
-		camera.mouseLook(lookEvent.LookDirection);
 
 		transform->rotateAroundAxis(lookEvent.LookDirection.x * -.001f * mouselookSensitivity , { 0, 1, 0 });
 		transform->rotateAroundAxis(lookEvent.LookDirection.y * -.001f * mouselookSensitivity , transform->right());
-
 
 		const glm::vec3 radianEulers = glm::eulerAngles(transform->orientation);
 		glm::vec3 degreeEulers = glm::degrees(radianEulers);
