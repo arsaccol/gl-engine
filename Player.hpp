@@ -63,13 +63,10 @@ private:
 
 	entt::entity playerEntity;
 	std::shared_ptr<Transform> transform;
-	
+	std::shared_ptr<PlayerParams> playerParams;
 
-	float mouselookSensitivity{ 5.f };
-	float movementSpeed{ .1f };
-
-	float pitch = 0.f;
-	float yaw = 0.f;
+	//float mouselookSensitivity{ 5.f };
+	//float movementSpeed{ .1f };
 
 	glm::vec3 walkVector;
 public:
@@ -94,7 +91,8 @@ Player::Player(entt::registry& registry)
 entt::entity Player::makePlayerEntity(const glm::vec3& position, const glm::vec3& rotationEulerAngles)
 {
 	playerEntity = registry.create();
-	registry.emplace<PlayerParams>(playerEntity);
+	playerParams = registry.emplace<std::shared_ptr<PlayerParams>>(playerEntity, 
+		std::make_shared<PlayerParams>());
 
 	transform = registry.emplace<std::shared_ptr<Transform>>(playerEntity, 
 		std::make_shared<Transform>(position, rotationEulerAngles));
@@ -122,8 +120,8 @@ void Player::registerLookHandler()
 	auto cameraLookHandler = [&](const event::Event& e) {
 		const auto& lookEvent = dynamic_cast<const CharacterLookEvent&>(e);
 
-		transform->rotateAroundAxis(lookEvent.LookDirection.x * -.001f * mouselookSensitivity , { 0, 1, 0 });
-		transform->rotateAroundAxis(lookEvent.LookDirection.y * -.001f * mouselookSensitivity , transform->right());
+		transform->rotateAroundAxis(lookEvent.LookDirection.x * -.001f * playerParams->mouseLookSensitivity , { 0, 1, 0 });
+		transform->rotateAroundAxis(lookEvent.LookDirection.y * -.001f * playerParams->mouseLookSensitivity , transform->right());
 
 		const glm::vec3 radianEulers = glm::eulerAngles(transform->orientation);
 		glm::vec3 degreeEulers = glm::degrees(radianEulers);
@@ -175,7 +173,7 @@ void Player::registerWalkHandler()
 
 		//transform.position += walkVector * movementSpeed;
 		float x = walkVector.x; float z = walkVector.z;
-		transform->translate(glm::vec3{ x, 0, z } * movementSpeed);
+		transform->translate(glm::vec3{ x, 0, z } * playerParams->movementSpeed);
 
 		//camera.walk(legacyWalkDirection);
 	};
