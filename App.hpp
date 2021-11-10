@@ -105,8 +105,12 @@ public:
 
 		ui.EndFrame();
 
-		// legend has it that glFlush should be used "in production" for better performance,
+		// Legend has it that glFlush should be used "in production" for better performance,
 		// as glFlush returns immediately whereas glFinish blocks until render is complete
+		//
+		// I'm not sure if this is a correct measurement, but we use glFinish in order to
+		// measure the total render time rather than just move on to the next frame before
+		// the current one is finished
 		glFinish();
 		//glfwSwapBuffers(windowObject.getAPIWindowPtr());
 	}
