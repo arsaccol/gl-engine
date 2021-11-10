@@ -17,7 +17,7 @@ class Input : public event::Observable
 {
 public:
 	void setup(Window& window);
-	void processInput(float deltaTime);
+	void processInput(double deltaTime);
 
 private:
 	void updateInput();
@@ -107,7 +107,7 @@ void Input::updateInput()
 
 // almost the same as before; call this function from outside I guess
 // just one difference is we now have the deltaTime thing... goddamn it
-void Input::processInput(float deltaTime)
+void Input::processInput(double deltaTime)
 {
 	glfwPollEvents();
 
@@ -152,7 +152,8 @@ void Input::processInput(float deltaTime)
 	{
 		CharacterWalkEvent walkEvent;
 		walkEvent.DirectionFlags = directionFlags;
-		walkEvent.Speed = 1.f;
+		walkEvent.Speed = 50.0;
+		walkEvent.dt = deltaTime;
 		SendEvent<CharacterWalkEvent>(walkEvent);
 	}
 };

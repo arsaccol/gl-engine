@@ -16,7 +16,8 @@ enum WalkDirections
 
 struct CharacterWalkEvent : public event::Event
 {
-	float Speed;
+	double Speed;
+	double dt;
 
 	int DirectionFlags;
 };

@@ -172,6 +172,7 @@ void Player::registerWalkHandler()
 			walkVector = glm::normalize(walkVector);
 
 		//transform.position += walkVector * movementSpeed;
+		walkVector *= walkEvent.dt * walkEvent.Speed;
 		float x = walkVector.x; float z = walkVector.z;
 		transform->translate(glm::vec3{ x, 0, z } * playerParams->movementSpeed);
 

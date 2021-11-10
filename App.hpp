@@ -56,11 +56,28 @@ public:
 	{
 		lastFrameTime = 0.0;
 
+		double dt = 1 / desiredFrameRate;
+
+		double currentTime = glfwGetTime();
+		double accumulator = 0.0;
+
 		while (!windowObject.shouldClose())
 		{
+			double newTime = glfwGetTime();
+			double frameTime = newTime - currentTime;
+			currentTime = newTime;
+
+			accumulator += frameTime;
+
+
+			while (accumulator >= dt)
+			{
+				input.processInput(dt);
+
+				accumulator -= dt;
+			}
+
 			deltaTime = glfwGetTime() - lastFrameTime; 
-			
-			input.processInput(deltaTime);
 
 			auto start = std::chrono::high_resolution_clock::now();
 
@@ -106,6 +123,7 @@ public:
 	std::chrono::duration<double, std::milli> render_time{};
 
 
+	double desiredFrameRate{60.0};
 	double deltaTime;
 	double lastFrameTime;
 	glm::vec2 lastMousePosition;
