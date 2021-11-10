@@ -54,8 +54,6 @@ public:
 
 	void loop()
 	{
-		lastFrameTime = 0.0;
-
 		double dt = 1 / desiredFrameRate;
 
 		double currentTime = glfwGetTime();
@@ -77,8 +75,6 @@ public:
 				accumulator -= dt;
 			}
 
-			deltaTime = glfwGetTime() - lastFrameTime; 
-
 			auto start = std::chrono::high_resolution_clock::now();
 
 			render();
@@ -86,8 +82,6 @@ public:
 			auto end = std::chrono::high_resolution_clock::now();
 			render_time = end - start;
 			//glfwSetWindowTitle(windowObject.getAPIWindowPtr(), (std::string( "Render time: " ) + std::to_string(render_time.count()) + " ms").c_str());
-
-			lastFrameTime = glfwGetTime();
 		}
 	}
 

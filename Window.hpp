@@ -67,8 +67,8 @@ private:
 
 		glfwMakeContextCurrent(apiWindow);
 
-		// Vsync? Hopefully
-		glfwSwapInterval(1);
+		// Vsync off
+		glfwSwapInterval(0);
 
 		glfwSetFramebufferSizeCallback(apiWindow, WindowManagement::framebufferSizeCallback);
 	}
