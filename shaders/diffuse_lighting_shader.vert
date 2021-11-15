@@ -3,6 +3,7 @@
 layout(location = 0) in vec3 vertexPosition;
 layout(location = 1) in vec2 textureCoordinates;
 layout(location = 2) in vec3 colorValue;
+layout(location = 3) in vec3 normal;
 
 uniform mat4 MVP;
 
