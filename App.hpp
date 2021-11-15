@@ -71,6 +71,7 @@ public:
 			while (accumulator >= dt)
 			{
 				input.processInput(dt);
+				scene.update(dt);
 
 				accumulator -= dt;
 			}

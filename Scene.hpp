@@ -19,7 +19,7 @@ public:
 	void setup();
 	entt::registry& getRegistry();
 
-	void update();
+	void update(double dt);
 	void render(const int windowWidth, const int windowHeight);
 private: 
 	void setupCubeMesh();
@@ -128,8 +128,14 @@ void Scene::setupCubeMesh()
 }
 
 
-void Scene::update()
+void Scene::update(double dt)
 {
+	const float rotationSpeed = 1.f;
+	registry.view<Transform>().each(
+		[&](Transform& transform) {
+			transform.rotateAroundAxis(rotationSpeed * dt, glm::vec3{ 0, 1, 0 });
+		}
+	);
 }
 
 void Scene::render(const int windowWidth, const int windowHeight)
