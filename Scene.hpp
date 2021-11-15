@@ -147,9 +147,8 @@ void Scene::render(const int windowWidth, const int windowHeight)
 	glm::mat4 view = glm::lookAt(position, position + forward, up);
 
 	glm::mat4 projection = glm::perspective<float>(glm::radians(60.f), (float)windowWidth / (float)windowHeight, 1.f, 100.f);
-	glm::mat4 view_projection =  projection * view;
 
-	renderer->DrawScene(view_projection, *shaderProgram, windowWidth, windowHeight);
+	renderer->DrawScene(view, projection, *shaderProgram, windowWidth, windowHeight);
 
 	player.Debug();
 }
