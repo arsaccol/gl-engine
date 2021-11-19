@@ -66,7 +66,7 @@ void Scene::setup()
 
 	//setupCubeMesh();
 
-	for (int i = 0; i < 500; ++i)
+	for (int i = 0; i < 250; ++i)
 	{
 		factory.BlenderCube(registry);
 	}
@@ -81,7 +81,7 @@ void Scene::loadResources()
 {
 	meshManager.emplace("human", std::make_shared<Mesh>("models/better-human.obj"));
 	textureManager.emplace("human", std::make_shared<Texture>("models/better-humanTexture.jpg"));
-	meshManager.emplace("cube", std::make_shared<Mesh>("models/blender-cube.obj"));
+	meshManager.emplace("cube", std::make_shared<Mesh>("models/monkey.obj"));
 	textureManager.emplace("cube", std::make_shared<Texture>("models/test-texture.jpg"));
 }
 

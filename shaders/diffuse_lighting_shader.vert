@@ -12,11 +12,13 @@ uniform mat4 model;
 out vec3 vertexColor;
 out vec2 textureCoord;
 out vec3 normal;
+out vec3 fragmentPosition;
 
 void main() {
 	vertexColor = colorValue;
 	textureCoord = textureCoordinates;
 	normal = vertexNormal;
+	fragmentPosition = vertexPosition;
 
 	mat4 MVP = projection * view * model;
 
