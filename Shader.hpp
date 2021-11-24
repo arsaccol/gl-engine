@@ -148,6 +148,13 @@ public:
 		glUseProgram(0);
 	}
 
+	void setVec3(const glm::vec3& vector, const char* vectorNameInShader)
+	{
+		glUseProgram(shaderProgramId);
+		glUniform3fv(shaderProgramId, 1, glm::value_ptr(vector));
+		glUseProgram(0);
+	}
+
 	void setMatrix4x4(const glm::mat4& matrix, const char* matrixNameInShader)
 	{
 		glUseProgram(shaderProgramId);

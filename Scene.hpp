@@ -81,7 +81,7 @@ void Scene::loadResources()
 {
 	meshManager.emplace("human", std::make_shared<Mesh>("models/better-human.obj"));
 	textureManager.emplace("human", std::make_shared<Texture>("models/better-humanTexture.jpg"));
-	meshManager.emplace("cube", std::make_shared<Mesh>("models/monkey.obj"));
+	meshManager.emplace("cube", std::make_shared<Mesh>("models/teapot.obj"));
 	textureManager.emplace("cube", std::make_shared<Texture>("models/test-texture.jpg"));
 }
 
@@ -148,7 +148,7 @@ void Scene::render(const int windowWidth, const int windowHeight)
 
 	glm::mat4 projection = glm::perspective<float>(glm::radians(60.f), (float)windowWidth / (float)windowHeight, 1.f, 100.f);
 
-	renderer->DrawScene(view, projection, *shaderProgram, windowWidth, windowHeight);
+	renderer->DrawScene(position, view, projection, *shaderProgram, windowWidth, windowHeight);
 
 	player.Debug();
 }
