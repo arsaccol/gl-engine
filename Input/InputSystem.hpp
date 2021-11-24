@@ -152,7 +152,7 @@ void Input::processInput(double deltaTime)
 	{
 		CharacterWalkEvent walkEvent;
 		walkEvent.DirectionFlags = directionFlags;
-		walkEvent.Speed = 50.0;
+		walkEvent.Speed = 75.0;
 		walkEvent.dt = deltaTime;
 		SendEvent<CharacterWalkEvent>(walkEvent);
 	}
