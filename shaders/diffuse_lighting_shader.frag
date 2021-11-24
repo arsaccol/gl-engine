@@ -21,7 +21,7 @@ vec3 lightPosition = vec3(0, 0, 0);
 vec3 lightColor = vec3(1, 1, 1);
 vec3 specColor = vec3(1, 1, 1);
 float ambientStrength = 0;
-float specularStrength = 5;
+float specularStrength = 1;
 
 float materialShininess = 32;
 
@@ -37,7 +37,7 @@ void main() {
 	float diffuseFactor = max(dot(worldSpaceNormal, lightDirection), 0.0);
 	vec3 ambient = ambientStrength * lightColor;
 
-	vec3 litColor = (ambient + specular + diffuseFactor) * diffuseColor;
+	vec3 litColor = (diffuseColor + specular) * lightColor * diffuseFactor;
 
 	fragmentColor = vec4(litColor, 1.0);
 }
