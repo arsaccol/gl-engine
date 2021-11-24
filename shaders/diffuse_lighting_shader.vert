@@ -12,16 +12,16 @@ uniform vec3 cameraPosition;
 
 out vec3 vertexColor;
 out vec2 textureCoord;
-out vec3 normal;
+out vec3 worldSpaceNormal;
 out vec3 fragmentPosition;
 
 void main() {
 	vertexColor = colorValue;
 	textureCoord = textureCoordinates;
-	normal = vertexNormal;
 
 	mat4 MVP = projection * view * model;
 	fragmentPosition = vec3(model * vec4(vertexPosition, 1));
+	worldSpaceNormal = mat3(transpose(inverse(model))) * vertexNormal;
 
 	gl_Position = MVP * vec4(vertexPosition, 1);
 	//gl_Position = vec4(vertexPosition, 1);

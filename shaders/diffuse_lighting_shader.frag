@@ -5,12 +5,15 @@ uniform vec3 cameraPosition;
 
 in vec3 vertexColor;
 in vec2 textureCoord;
-in vec3 normal;
+in vec3 worldSpaceNormal;
 in vec3 fragmentPosition;
 
 out vec4 fragmentColor;
 
 uniform sampler2D ourTexture;
+
+// dummy fragment attributes
+vec3 diffuseColor = texture(ourTexture, textureCoord).xyz;
 
 // light parameters are hard-coded for now
 float lightIntensity = 5.0;
@@ -23,7 +26,6 @@ float specularStrength = 5;
 float materialShininess = 32;
 
 void main() {
-	vec3 worldSpaceNormal = mat3( transpose( inverse(model) ) ) * normal;
 	vec3 lightDirection = normalize(lightPosition - fragmentPosition);
 
 	vec3 viewDirection = normalize(cameraPosition - fragmentPosition);
@@ -35,7 +37,7 @@ void main() {
 	float diffuseFactor = max(dot(worldSpaceNormal, lightDirection), 0.0);
 	vec3 ambient = ambientStrength * lightColor;
 
-	vec3 litColor = (ambient + specular + diffuseFactor) * vec3(texture(ourTexture, textureCoord));
+	vec3 litColor = (ambient + specular + diffuseFactor) * diffuseColor;
 
 	fragmentColor = vec4(litColor, 1.0);
 }
