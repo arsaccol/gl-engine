@@ -40,6 +40,9 @@ void RenderSystem::DrawScene(const glm::vec3& cameraPosition, const glm::mat4& v
 	registry.view <Transform, std::shared_ptr<Mesh>, std::shared_ptr<Texture>>().each(
 		[&](const Transform& transform, const std::shared_ptr<Mesh>& mesh_ptr, const std::shared_ptr<Texture>& texture_ptr) {
 
+			glm::mat3 normalMatrix = glm::mat3(glm::transpose(glm::inverse(transform.getModelMatrix())));
+
+			shaderProgram.setMatrix3x3(normalMatrix, "normalMatrix");
 
 			glm::mat4 modelMatrix = transform.getModelMatrix();
 			shaderProgram.setMatrix4x4(modelMatrix, "model");

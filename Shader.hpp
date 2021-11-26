@@ -162,6 +162,13 @@ public:
 		glUseProgram(0);
 	}
 
+	void setMatrix3x3(const glm::mat3& matrix, const char* matrixNameInShader)
+	{
+		glUseProgram(shaderProgramId);
+		glUniformMatrix3fv(glGetUniformLocation(shaderProgramId, matrixNameInShader), 1, GL_FALSE, glm::value_ptr(matrix));
+		glUseProgram(0);
+	}
+
 private:
 	void prepareShaders(ShaderTargetFilenamePairs pairs)
 	{
