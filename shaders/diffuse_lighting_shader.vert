@@ -8,6 +8,7 @@ layout(location = 3) in vec3 vertexNormal;
 uniform mat4 view;
 uniform mat4 projection;
 uniform mat4 model;
+uniform mat3 normalMatrix;
 uniform vec3 cameraPosition;
 
 out vec3 vertexColor;
@@ -21,7 +22,7 @@ void main() {
 
 	mat4 MVP = projection * view * model;
 	fragmentPosition = vec3(model * vec4(vertexPosition, 1));
-	worldSpaceNormal = mat3(transpose(inverse(model))) * vertexNormal;
+	worldSpaceNormal = normalMatrix * vertexNormal;
 
 	gl_Position = MVP * vec4(vertexPosition, 1);
 	//gl_Position = vec4(vertexPosition, 1);
