@@ -180,8 +180,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\basic_fragment_shader.frag" />
-    <None Include="shaders\diffuse_lighting_shader.frag" />
-    <None Include="shaders\diffuse_lighting_shader.vert" />
+    <None Include="shaders\phong_shading.frag" />
+    <None Include="shaders\phong_shading.vert" />
     <None Include="vcpkg.json" />
     <None Include="shaders\basic_vertex_shader.vert" />
   </ItemGroup>

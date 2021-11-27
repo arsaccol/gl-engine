@@ -119,7 +119,7 @@
     <None Include="shaders\basic_vertex_shader.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="shaders\diffuse_lighting_shader.vert" />
-    <None Include="shaders\diffuse_lighting_shader.frag" />
+    <None Include="shaders\phong_shading.vert" />
+    <None Include="shaders\phong_shading.frag" />
   </ItemGroup>
 </Project>

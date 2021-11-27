@@ -47,8 +47,8 @@ void Scene::setup()
 	playerTransform = registry.get<std::shared_ptr<Transform>>(playerEntity);
 
 	shaderProgram = std::make_unique<ShaderProgram>(ShaderProgram::ShaderTargetFilenamePairs{
-		{GL_VERTEX_SHADER, "shaders/diffuse_lighting_shader.vert"},
-		{GL_FRAGMENT_SHADER, "shaders/diffuse_lighting_shader.frag"},
+		{GL_VERTEX_SHADER, "shaders/phong_shading.vert"},
+		{GL_FRAGMENT_SHADER, "shaders/phong_shading.frag"},
 		});
 
 	renderer = std::make_unique<RenderSystem>(registry);
