@@ -37,7 +37,10 @@ void main() {
 	float diffuseFactor = max(dot(worldSpaceNormal, lightDirection), 0.0);
 	vec3 ambient = ambientStrength * lightColor;
 
-	vec3 litColor = (diffuseColor + specular) * lightColor * diffuseFactor;
+	float lightToFragmentDistance = distance(lightPosition, fragmentPosition);
+	float lightAttenuation = 1 / (lightToFragmentDistance * lightToFragmentDistance) * 100;
+
+	vec3 litColor = (diffuseColor + specular) * lightColor * diffuseFactor * lightAttenuation;
 
 	fragmentColor = vec4(litColor, 1.0);
 }
