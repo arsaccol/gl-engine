@@ -81,7 +81,7 @@ void Scene::loadResources()
 {
 	meshManager.emplace("human", std::make_shared<Mesh>("models/better-human.obj"));
 	textureManager.emplace("human", std::make_shared<Texture>("models/better-humanTexture.jpg"));
-	meshManager.emplace("cube", std::make_shared<Mesh>("models/teapot.obj"));
+	meshManager.emplace("cube", std::make_shared<Mesh>("models/teapot-smooth.obj"));
 	textureManager.emplace("cube", std::make_shared<Texture>("models/test-texture.jpg"));
 }
 
