@@ -19,6 +19,7 @@ struct Light {
 	vec3 position;
 	vec3 color;
 	float ambientIntensity;
+	float attenuationFactor;
 };
 
 struct Material {
@@ -28,31 +29,31 @@ struct Material {
 	float shininess;
 };
 
-//vec3 litColor(Light light, Material material)
-//{
-//	return vec3(1, 1, 1);
-//}
-
-void main() {
-
-	Light light = Light(5.0, vec3(0, 0, 0), vec3(1, 1, 1), 0);
-	Material material = Material( texture(ourTexture, textureCoord).xyz, vec3(1, 1, 1), vec3(1, 1, 1), 32);
-
+vec4 litColor(Light light, Material material)
+{
 	vec3 lightDirection = normalize(light.position - fragmentPosition);
-
 	vec3 viewDirection = normalize(cameraPosition - fragmentPosition);
 	vec3 reflectDirection = reflect(-lightDirection, normalize(worldSpaceNormal));
 
-	float spec = pow( max(dot(viewDirection, reflectDirection), 0.0), material.shininess);
-	vec3 specularFactor = spec * material.specularColor;
+	float specularFactor = pow( max(dot(viewDirection, reflectDirection), 0.0), material.shininess);
+	vec3 specularColor = specularFactor * material.specularColor;
 
 	float diffuseFactor = max(dot(worldSpaceNormal, lightDirection), 0.0);
-	vec3 ambient = light.ambientIntensity * light.color;
 
 	float lightToFragmentDistance = distance(light.position, fragmentPosition);
-	float lightAttenuation = 1 / (lightToFragmentDistance * lightToFragmentDistance) * 100;
+	float lightAttenuation = 1 / (lightToFragmentDistance * lightToFragmentDistance) * light.attenuationFactor;
 
-	vec3 litColor = (light.ambientIntensity + material.diffuseColor + specularFactor) * light.color * diffuseFactor * lightAttenuation;
 
-	fragmentColor = vec4(litColor, 1.0);
+
+	vec3 litColor = (light.ambientIntensity + material.diffuseColor + specularColor) * light.color * diffuseFactor * lightAttenuation;
+	return vec4(litColor, 1.0);
+}
+
+void main() {
+
+	int arraySize = 2;
+	Light light = Light(5.0, vec3(0, 3, -10), vec3(1, 1, 1), 0, 250);
+	Material material = Material( texture(ourTexture, textureCoord).xyz, vec3(1, 1, 1), vec3(1, 1, 1), 32);
+
+	fragmentColor = litColor(light, material);
 }
