@@ -16,17 +16,24 @@ uniform sampler2D ourTexture;
 vec3 diffuseColor = texture(ourTexture, textureCoord).xyz;
 
 // light parameters are hard-coded for now
-float lightIntensity = 5.0;
-vec3 lightPosition = vec3(0, 0, 0);
-vec3 lightColor = vec3(1, 1, 1);
+struct Light {
+	float intensity;
+	vec3 position;
+	vec3 color;
+	float ambient;
+};
+
+// material properties I suppose?
 vec3 specColor = vec3(1, 1, 1);
-float ambientStrength = 0;
+float materialShininess = 32;
 float specularStrength = 1;
 
-float materialShininess = 32;
 
 void main() {
-	vec3 lightDirection = normalize(lightPosition - fragmentPosition);
+
+	Light light = Light(5.0, vec3(0, 0, 0), vec3(1, 1, 1), 0);
+
+	vec3 lightDirection = normalize(light.position - fragmentPosition);
 
 	vec3 viewDirection = normalize(cameraPosition - fragmentPosition);
 	vec3 reflectDirection = reflect(-lightDirection, normalize(worldSpaceNormal));
@@ -35,12 +42,12 @@ void main() {
 	vec3 specular = specularStrength * spec * specColor;
 
 	float diffuseFactor = max(dot(worldSpaceNormal, lightDirection), 0.0);
-	vec3 ambient = ambientStrength * lightColor;
+	vec3 ambient = light.ambient * light.color;
 
-	float lightToFragmentDistance = distance(lightPosition, fragmentPosition);
+	float lightToFragmentDistance = distance(light.position, fragmentPosition);
 	float lightAttenuation = 1 / (lightToFragmentDistance * lightToFragmentDistance) * 100;
 
-	vec3 litColor = (diffuseColor + specular) * lightColor * diffuseFactor * lightAttenuation;
+	vec3 litColor = (light.ambient + diffuseColor + specular) * light.color * diffuseFactor * lightAttenuation;
 
 	fragmentColor = vec4(litColor, 1.0);
 }
