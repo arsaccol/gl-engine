@@ -52,8 +52,14 @@ vec4 litColor(Light light, Material material)
 void main() {
 
 	int arraySize = 2;
-	Light light = Light(5.0, vec3(0, 3, -10), vec3(1, 1, 1), 0, 250);
+	Light light0 = Light(5.0, vec3(-5, 3, -5), vec3(1, 0, 0), 0, 250);
+	Light light1 = Light(5.0, vec3(5, 3, 5), vec3(0, 0, 1), 0, 250);
+
 	Material material = Material( texture(ourTexture, textureCoord).xyz, vec3(1, 1, 1), vec3(1, 1, 1), 32);
 
-	fragmentColor = litColor(light, material);
+	vec4 color = litColor(light0, material);
+	color += litColor(light1, material);
+
+	//fragmentColor = litColor(light0, material);
+	fragmentColor = color;
 }
