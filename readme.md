@@ -1,3 +1,6 @@
+# [Demo video (on YouTube)](https://www.youtube.com/watch?v=ni9_wUjT-tk)
+[![](https://img.youtube.com/vi/ni9_wUjT-tk/maxresdefault.jpg)](https://www.youtube.com/watch?v=ni9_wUjT-tk)
+
 # gl-engine
 
 Basic game engine project I'm working on, made in C++ and using OpenGL for graphics. I am using it both for learning OpenGL and graphics, and to get a sense of how to build a game engine. We'll see how that goes! 
