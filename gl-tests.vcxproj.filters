@@ -121,5 +121,6 @@
     </None>
     <None Include="shaders\phong_shading.vert" />
     <None Include="shaders\phong_shading.frag" />
+    <None Include="readme.md" />
   </ItemGroup>
 </Project>

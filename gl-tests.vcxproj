@@ -179,6 +179,7 @@
     <ClInclude Include="Window.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="readme.md" />
     <None Include="shaders\basic_fragment_shader.frag" />
     <None Include="shaders\phong_shading.frag" />
     <None Include="shaders\phong_shading.vert" />
