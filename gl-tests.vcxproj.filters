@@ -122,5 +122,7 @@
     <None Include="shaders\phong_shading.vert" />
     <None Include="shaders\phong_shading.frag" />
     <None Include="readme.md" />
+    <None Include="shaders\phong-with-uniforms.vert" />
+    <None Include="shaders\phong-with-uniforms.frag" />
   </ItemGroup>
 </Project>

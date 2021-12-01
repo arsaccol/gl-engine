@@ -181,6 +181,8 @@
   <ItemGroup>
     <None Include="readme.md" />
     <None Include="shaders\basic_fragment_shader.frag" />
+    <None Include="shaders\phong-with-uniforms.frag" />
+    <None Include="shaders\phong-with-uniforms.vert" />
     <None Include="shaders\phong_shading.frag" />
     <None Include="shaders\phong_shading.vert" />
     <None Include="vcpkg.json" />
