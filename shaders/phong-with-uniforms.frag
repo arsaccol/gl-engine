@@ -24,8 +24,8 @@ struct Light
 struct Material
 {
 	vec3 diffuse; // should be sampler2d?
-	//vec3 specular; // should be sampler2d?
-	//vec3 emission; // should be sampler2d?
+	vec3 specular; // should be sampler2d?
+	vec3 emission; // should be sampler2d?
 	float shininess;
 };
 
@@ -62,7 +62,7 @@ void main()
 {
 	Light redLight = Light( vec3(-5, 3, -5), vec3(1, 0, 0), vec3(0.05, 0.05, 0.05), vec3(1, 1, 1) );
 	Light blueLight = Light( vec3(5, -3, 5), vec3(0, 0, 1), vec3(0.05, 0.05, 0.05), vec3(1, 1, 1) );
-	Material material = Material(texture(ourTexture, textureCoord).rgb, 32);
+	Material material = Material(texture(ourTexture, textureCoord).rgb, vec3(0), vec3(0), 32);
 
 	vec4 color = vec4(enlightenFragment(redLight, material), 1);
 	color += vec4(enlightenFragment(blueLight, material), 1);
