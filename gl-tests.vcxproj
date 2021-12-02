@@ -164,6 +164,8 @@
     <ClInclude Include="Input\InputEvents\CharacterInputEvent.hpp" />
     <ClInclude Include="Input\InputEvents\PlayerInputEvent.hpp" />
     <ClInclude Include="Input\InputSystem.hpp" />
+    <ClInclude Include="Light.hpp" />
+    <ClInclude Include="Material.hpp" />
     <ClInclude Include="Mesh.hpp" />
     <ClInclude Include="Event\Observable.hpp" />
     <ClInclude Include="Player.hpp" />
@@ -171,6 +173,7 @@
     <ClInclude Include="RenderSystem.hpp" />
     <ClInclude Include="ResourceManager.hpp" />
     <ClInclude Include="Scene.hpp" />
+    <ClInclude Include="SceneNode.hpp" />
     <ClInclude Include="Shader.hpp" />
     <ClInclude Include="Texture.hpp" />
     <ClInclude Include="Transform.hpp" />
