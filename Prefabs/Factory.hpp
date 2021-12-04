@@ -6,6 +6,7 @@
 #include "../Texture.hpp"
 #include "../Transform.hpp"
 #include "../ResourceManager.hpp"
+#include "../SceneNode.hpp"
 
 struct Factory
 {
@@ -18,26 +19,25 @@ struct Factory
 	}
 
 
-	auto Human(entt::registry& registry)
+	entt::entity Human(entt::registry& registry, entt::entity parent)
 	{
-		//textureManager.emplace("human", std::make_shared<Texture>("models/better-humanTexture.jpg"));
-		//meshManager.emplace("human", std::make_shared<Mesh>("models/better-human.obj"));
-
-		auto humanEntity = registry.create();
+		entt::entity humanEntity = registry.create();
+		registry.emplace<Transform>(humanEntity);
+		registry.emplace<SceneNode>(humanEntity);
+		SceneNode::addChild(registry, parent, humanEntity);
+		
 
 		registry.emplace<std::shared_ptr<Mesh>>(humanEntity, meshManager["human"]);
-		registry.emplace<Transform>(humanEntity);
 		registry.emplace<std::shared_ptr<Texture>>(humanEntity, textureManager["human"]);
 
 		return humanEntity;
 	}
 
-	auto BlenderCube(entt::registry& registry)
+	entt::entity BlenderCube(entt::registry& registry, entt::entity parent)
 	{
-		//textureManager.emplace("blender-cube", std::make_shared<Texture>("models/test-texture.jpg"));
-		//meshManager.emplace("blender-cube", std::make_shared<Mesh>("models/blender-cube.obj"));
+		entt::entity cubeEntity = registry.create();
+		SceneNode::addChild(registry, parent, cubeEntity);
 
-		auto cubeEntity = registry.create();
 		registry.emplace<Transform>(cubeEntity, 
 			glm::vec3{
 				static_cast<float>(rand() % 100 - 50),
@@ -48,6 +48,8 @@ struct Factory
 
 		registry.emplace<std::shared_ptr<Mesh>>(cubeEntity, meshManager["cube"]);
 		registry.emplace<std::shared_ptr<Texture>>(cubeEntity, textureManager["cube"]);
+
+		return cubeEntity;
 	}
 
 private:

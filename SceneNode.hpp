@@ -1,23 +1,24 @@
 #pragma once
 
-#include <vector>
-#include <memory>
-#include <algorithm> // maybe unneeded?
-#include <glm/glm.hpp>
-#include "Transform.hpp"
-
-#include "entt/entt.hpp"
-
-// Scene nodes only contain 
+#include <unordered_set>
+#include <entt/entt.hpp>
 
 struct SceneNode
 {
-	entt::entity parent;
-	std::vector<entt::entity> children;
+	entt::entity parent {entt::null};
+	// use set instead
+	std::unordered_set<entt::entity> children;
 
-	void applyTransform(const Transform& transform)
+
+	// TODO: make the registry a singleton so we don't have to pass it around like this
+	static void addChild(entt::registry& registry, entt::entity parent, entt::entity child)
 	{
+		SceneNode& parentNode = registry.get<SceneNode>(parent);
+		SceneNode& childNode = registry.get<SceneNode>(parent);
 
+		parentNode.children.insert(child);
+		childNode.parent = parent;
 	}
+
 };
 
