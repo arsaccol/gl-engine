@@ -10,7 +10,6 @@
 #include "./Event/Observer.hpp"
 #include "./Input/InputEvents/CharacterInputEvent.hpp"
 
-#include "./Camera.hpp"
 #include "./Transform.hpp"
 
 #include "Helper.hpp"
@@ -42,6 +41,15 @@ public:
 		float movementSpeed{ .1f };
 		float pitch{ 0 };
 		float yaw{ 0 };
+	};
+
+	enum class WalkDirection
+	{
+		FORWARD,
+		BACKWARD,
+		STRAFE_LEFT,
+		STRAFE_RIGHT,
+		NO_WALK
 	};
 
 
@@ -146,7 +154,7 @@ void Player::registerWalkHandler()
 		// afterwards we can use a proper vector or something to dictate walk movement with
 		// diagonal directions and all that stuff
 
-		auto legacyWalkDirection = Camera::WalkDirection::NO_WALK;
+		auto legacyWalkDirection = WalkDirection::NO_WALK;
 
 		walkVector = { 0, 0, 0 };
 
