@@ -36,6 +36,7 @@ struct Factory
 	entt::entity BlenderCube(entt::registry& registry, entt::entity parent)
 	{
 		entt::entity cubeEntity = registry.create();
+		registry.emplace<SceneNode>(cubeEntity);
 		SceneNode::addChild(registry, parent, cubeEntity);
 
 		registry.emplace<Transform>(cubeEntity, 

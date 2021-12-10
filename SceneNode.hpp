@@ -6,7 +6,6 @@
 struct SceneNode
 {
 	entt::entity parent {entt::null};
-	// use set instead
 	std::unordered_set<entt::entity> children;
 
 

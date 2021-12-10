@@ -58,6 +58,7 @@ void Scene::setupSceneGraphRoot()
 
 void Scene::setupPlayer()
 {
+	player.setup(rootNodeEntity);
 	playerEntity = player.getEntity();
 	playerTransform = registry.get<std::shared_ptr<Transform>>(playerEntity);
 	registry.emplace<SceneNode>(playerEntity);
@@ -83,7 +84,7 @@ void Scene::setup()
 	humanTransform.translateLocal(0, 0, -10);
 	humanTransform.translate(5, 0, 0);
 
-	for (int i = 0; i < 250; ++i)
+	for (int i = 0; i < 1; ++i)
 	{
 		factory.BlenderCube(registry, rootNodeEntity);
 	}
@@ -175,7 +176,8 @@ void Scene::render(const int windowWidth, const int windowHeight)
 
 	glm::mat4 projection = glm::perspective<float>(glm::radians(60.f), (float)windowWidth / (float)windowHeight, 1.f, 100.f);
 
-	renderer->DrawScene(position, view, projection, *shaderProgram, windowWidth, windowHeight);
+	//renderer->DrawScene(position, view, projection, *shaderProgram, windowWidth, windowHeight);
+	renderer->DrawSceneGraph(position, view, projection, *shaderProgram, windowWidth, windowHeight, rootNodeEntity);
 
 	player.Debug();
 }

@@ -17,6 +17,8 @@
 #include <imgui.h>
 #include <entt/entt.hpp>
 
+#include "SceneNode.hpp"
+
 
 template <typename EventSubType>
 std::function<void(const EventSubType&)> createEventHandler(const event::EventDispatcher::EventHandler& eh)
@@ -58,10 +60,11 @@ public:
 	// emplacing a transform, some PlayerParams, and a Camera (not done yet)
 	// Camera is dependent upon player's Transform, and only carries "config" info such as FOV and whatnot
 	Player(entt::registry& registry);
+	void setup(entt::entity parent);
 
 	void Debug();
 private:
-	entt::entity makePlayerEntity(const glm::vec3& position, const glm::vec3& rotationEulerAngles);
+	entt::entity makePlayerEntity(entt::entity parent, const glm::vec3& position, const glm::vec3& rotationEulerAngles);
 	void registerLookHandler();
 	void registerWalkHandler();
 	void registerResetHandlers();
@@ -89,14 +92,19 @@ public:
 Player::Player(entt::registry& registry)
 	: registry{ registry }
 {
-	makePlayerEntity(glm::vec3{ 0, 1.65, 3 }, glm::vec3{ 0, glm::radians(0.f), 0 });
+}
+
+void Player::setup(entt::entity parent)
+{
+	makePlayerEntity(parent, glm::vec3{ 0, 1.65, 3 }, glm::vec3{ 0, glm::radians(0.f), 0 });
 
 	registerLookHandler();
 	registerWalkHandler();
 	registerResetHandlers();
+
 }
 
-entt::entity Player::makePlayerEntity(const glm::vec3& position, const glm::vec3& rotationEulerAngles)
+entt::entity Player::makePlayerEntity(entt::entity parent, const glm::vec3& position, const glm::vec3& rotationEulerAngles)
 {
 	playerEntity = registry.create();
 	playerParams = registry.emplace<std::shared_ptr<PlayerParams>>(playerEntity, 
@@ -104,6 +112,8 @@ entt::entity Player::makePlayerEntity(const glm::vec3& position, const glm::vec3
 
 	transform = registry.emplace<std::shared_ptr<Transform>>(playerEntity, 
 		std::make_shared<Transform>(position, rotationEulerAngles));
+
+	SceneNode::addChild(registry, parent, playerEntity);
 
 	return playerEntity;
 }
