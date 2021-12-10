@@ -61,8 +61,9 @@ void RenderSystem::DrawSceneGraph(const glm::vec3& cameraPosition, const glm::ma
 
 			// move upwards in scene tree to build a global world matrix for this mesh
 			auto currentDrawable = std::make_tuple(sceneNode, transform);
-			while (std::get<0>(currentDrawable).parent != entt::null)
+			while (std::get<0>(currentDrawable).parent != sceneGraphRoot)
 			{
+				// ERROR: we have an infinite loop here
 				entt::entity parentEntity = std::get<0>(currentDrawable).parent;
 				SceneNode& parentSceneNode = drawablesView.get<SceneNode>(parentEntity);
 				Transform& parentTransform = drawablesView.get<Transform>(parentEntity);

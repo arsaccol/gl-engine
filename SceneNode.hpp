@@ -13,7 +13,7 @@ struct SceneNode
 	static void addChild(entt::registry& registry, entt::entity parent, entt::entity child)
 	{
 		SceneNode& parentNode = registry.get<SceneNode>(parent);
-		SceneNode& childNode = registry.get<SceneNode>(parent);
+		SceneNode& childNode = registry.get<SceneNode>(child);
 
 		parentNode.children.insert(child);
 		childNode.parent = parent;

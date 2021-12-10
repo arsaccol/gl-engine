@@ -41,9 +41,9 @@ struct Factory
 
 		registry.emplace<Transform>(cubeEntity, 
 			glm::vec3{
-				static_cast<float>(rand() % 100 - 50),
-				static_cast<float>(rand() % 100 - 50),
-				static_cast<float>(rand() % 100 - 50),
+				static_cast<float>(rand() % 50 - 25) + 10,
+				static_cast<float>(rand() % 50 - 25),
+				static_cast<float>(rand() % 50 - 25),
 			}
 		);
 

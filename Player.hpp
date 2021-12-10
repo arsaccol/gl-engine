@@ -113,6 +113,8 @@ entt::entity Player::makePlayerEntity(entt::entity parent, const glm::vec3& posi
 	transform = registry.emplace<std::shared_ptr<Transform>>(playerEntity, 
 		std::make_shared<Transform>(position, rotationEulerAngles));
 
+	registry.emplace<SceneNode>(playerEntity);
+
 	SceneNode::addChild(registry, parent, playerEntity);
 
 	return playerEntity;

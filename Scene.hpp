@@ -61,8 +61,8 @@ void Scene::setupPlayer()
 	player.setup(rootNodeEntity);
 	playerEntity = player.getEntity();
 	playerTransform = registry.get<std::shared_ptr<Transform>>(playerEntity);
-	registry.emplace<SceneNode>(playerEntity);
-	SceneNode::addChild(registry, rootNodeEntity, playerEntity);
+	//registry.emplace<SceneNode>(playerEntity);
+	//SceneNode::addChild(registry, rootNodeEntity, playerEntity);
 
 }
 
@@ -84,9 +84,9 @@ void Scene::setup()
 	humanTransform.translateLocal(0, 0, -10);
 	humanTransform.translate(5, 0, 0);
 
-	for (int i = 0; i < 1; ++i)
+	for (int i = 0; i < 50; ++i)
 	{
-		factory.BlenderCube(registry, rootNodeEntity);
+		entt::entity cubeID = factory.BlenderCube(registry, humanID);
 	}
 }
 
@@ -102,7 +102,7 @@ void Scene::loadResources()
 	// load meshes and textures
 	meshManager.emplace("human", std::make_shared<Mesh>("models/better-human.obj"));
 	textureManager.emplace("human", std::make_shared<Texture>("models/better-humanTexture.jpg"));
-	meshManager.emplace("cube", std::make_shared<Mesh>("models/teapot-smooth.obj"));
+	meshManager.emplace("cube", std::make_shared<Mesh>("models/blender-cube.obj"));
 	textureManager.emplace("cube", std::make_shared<Texture>("models/test-texture.jpg"));
 
 	// load shaders
