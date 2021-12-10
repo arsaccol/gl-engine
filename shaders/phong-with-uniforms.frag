@@ -34,7 +34,7 @@ vec3 attenuate(vec3 litColor, vec3 fragmentPosition,  Light light)
 	float fragLightDistance = distance(light.position, fragmentPosition);
 	float attenuation = 1 / (fragLightDistance * fragLightDistance);
 
-	vec3 attenuatedColor = litColor * attenuation * 100; // this last value shouldn't be hardcoded...
+	vec3 attenuatedColor = litColor * attenuation * 200; // this last value shouldn't be hardcoded...
 
 	return attenuatedColor;
 }
@@ -60,8 +60,8 @@ vec3 enlightenFragment(Light light, Material material)
 
 void main()
 {
-	Light redLight = Light( vec3(-5, 3, -5), vec3(1, 0, 0), vec3(0.05, 0.05, 0.05), vec3(1, 1, 1) );
-	Light blueLight = Light( vec3(5, -3, 5), vec3(0, 0, 1), vec3(0.05, 0.05, 0.05), vec3(1, 1, 1) );
+	Light redLight = Light( vec3(-5, 3, -5), vec3(1, 0.5, 0.5), vec3(0.05, 0.05, 0.05), vec3(1, 1, 1) );
+	Light blueLight = Light( vec3(5, -3, 5), vec3(0.5, 0.5, 1), vec3(0.05, 0.05, 0.05), vec3(1, 1, 1) );
 	Material material = Material(texture(ourTexture, textureCoord).rgb, vec3(0), vec3(0), 32);
 
 	vec4 color = vec4(enlightenFragment(redLight, material), 1);
