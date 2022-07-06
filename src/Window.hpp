@@ -62,7 +62,7 @@ private:
 
 		if (apiWindow == nullptr) {
 			glfwTerminate();
-			throw std::exception("Couldn't create GLFW window");
+			throw std::runtime_error("Couldn't create GLFW window");
 		}
 
 		glfwMakeContextCurrent(apiWindow);

@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <glad/glad.h>
-#include <GL/GL.h>
+#include <GL/gl.h>
 
 void printGLError(const std::string& contextName)
 {

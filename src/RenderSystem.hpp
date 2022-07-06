@@ -1,7 +1,6 @@
 #pragma once
 
 #include <stack>
-#include <ranges>
 #include <tuple>
 
 #include <entt/entt.hpp>

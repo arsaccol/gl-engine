@@ -1,5 +1,5 @@
 #include <glad/glad.h>
-#include <GL/GL.h>
+#include <GL/gl.h>
 #include <glm/glm.hpp>
 
 #include "App.hpp"

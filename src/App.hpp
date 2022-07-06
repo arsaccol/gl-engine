@@ -6,7 +6,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <GL/GL.h>
+#include <GL/gl.h>
 
 #include "Window.hpp"
 #include "Input/InputSystem.hpp"
@@ -43,7 +43,7 @@ public:
 	void initGL()
 	{
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-			throw std::exception("Failed to initialize GLAD");
+			throw std::runtime_error("Failed to initialize GLAD");
 		}
 
 		glEnable(GL_DEPTH_TEST);
