@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <typeindex>
 #include <functional>
+#include <string>
 
 
 namespace event 
