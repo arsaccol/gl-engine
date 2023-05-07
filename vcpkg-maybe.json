@@ -1,0 +1,20 @@
+{
+    "name": "gl-engine",
+    "version": "0.0.1",
+    "dependencies": [
+      "glfw3",
+      "glad",
+      {
+        "name": "imgui",
+        "features": [ "glfw-binding", "opengl3-binding" ]
+      },
+      "glm",
+      "entt",
+      "assimp",
+      "stb",
+      "xinerama",
+      "xcursor",
+      "xorg",
+      "glu1_mesa"
+    ]
+}
