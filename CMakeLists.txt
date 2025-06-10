@@ -25,6 +25,7 @@ message("buga buga buga")
 
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS "src/*.cpp")
 add_executable(${EXECUTABLE} ${sources})
+target_compile_definitions(${EXECUTABLE} PRIVATE GLM_ENABLE_EXPERIMENTAL)
 
 target_include_directories(${EXECUTABLE} PUBLIC ${STB_INCLUDE_DIRS})
 target_link_libraries(${EXECUTABLE} PRIVATE assimp::assimp)
