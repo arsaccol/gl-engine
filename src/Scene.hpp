@@ -14,6 +14,7 @@
 #include "Prefabs/Factory.hpp"
 
 #include "SceneNode.hpp"
+#include "Light.hpp" // Added for Light class
 
 class Scene
 {
@@ -72,6 +73,31 @@ void Scene::setup()
 	renderer = std::make_unique<RenderSystem>(registry);
 
 	setupSceneGraphRoot();
+
+	// Create lights using the factory
+	// Light 1
+	factory.createLight(
+		registry,
+		rootNodeEntity, // Parent
+		{ // Light Properties (using designated initializers for Light struct)
+			.ambient = glm::vec3(0.2f, 0.2f, 0.2f),
+			.diffuse = glm::vec3(0.8f, 0.8f, 0.8f), // White light
+			.specular = glm::vec3(1.0f, 1.0f, 1.0f)
+		},
+		glm::vec3(5.0f, 5.0f, 5.0f) // Position
+	);
+
+	// Light 2
+	factory.createLight(
+		registry,
+		rootNodeEntity, // Parent
+		{ // Light Properties
+			.ambient = glm::vec3(0.1f, 0.1f, 0.1f),
+			.diffuse = glm::vec3(0.5f, 0.2f, 0.2f), // Reddish light
+			.specular = glm::vec3(0.7f, 0.7f, 0.7f)
+		},
+		glm::vec3(-5.0f, 3.0f, -5.0f) // Position
+	);
 
 	setupPlayer();
 

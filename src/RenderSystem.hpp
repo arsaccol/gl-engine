@@ -11,6 +11,7 @@
 #include "Shader.hpp"
 #include "Texture.hpp"
 #include "SceneNode.hpp"
+#include "Light.hpp" // Added for Light class
 
 
 
@@ -52,6 +53,47 @@ void RenderSystem::DrawMesh(Mesh& mesh, Texture& texture, const glm::vec3& camer
 
 void RenderSystem::DrawSceneGraph(const glm::vec3& cameraPosition, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, ShaderProgram& shaderProgram, int screenWidth, int screenHeight, entt::entity sceneGraphRoot)
 {
+	struct ShaderLightData {
+		glm::vec3 position;
+		glm::vec3 ambient;
+		glm::vec3 diffuse;
+		glm::vec3 specular;
+	};
+	std::vector<ShaderLightData> lightsForShader;
+	auto lightView = registry.view<::Light, Transform, SceneNode>(); // Added SceneNode to the view
+	for (auto entity : lightView) {
+		const auto& lightComponent = lightView.get<::Light>(entity);
+		const auto& transformComponent = lightView.get<Transform>(entity);
+		const auto& lightSceneNode = lightView.get<SceneNode>(entity);
+
+		glm::mat4 lightWorldMatrix = transformComponent.getModelMatrix();
+		entt::entity parentEntity = lightSceneNode.parent;
+
+		// Traverse up the scene graph to calculate world position
+		while (registry.valid(parentEntity) && parentEntity != sceneGraphRoot) {
+			if (!registry.all_of<Transform, SceneNode>(parentEntity)) {
+				// Log warning or handle error: parent is missing required components
+				break;
+			}
+			const auto& parentTransform = registry.get<Transform>(parentEntity);
+			lightWorldMatrix = parentTransform.getModelMatrix() * lightWorldMatrix;
+
+			const auto& parentSceneNode = registry.get<SceneNode>(parentEntity);
+			parentEntity = parentSceneNode.parent;
+		}
+
+		glm::vec3 worldLightPosition = glm::vec3(lightWorldMatrix[3]);
+
+		ShaderLightData sld;
+		sld.position = worldLightPosition;
+		sld.ambient = lightComponent.ambient;
+		sld.diffuse = lightComponent.diffuse;
+		sld.specular = lightComponent.specular;
+
+		lightsForShader.push_back(sld);
+	}
+	shaderProgram.setLights(lightsForShader, "lights");
+
 	auto drawablesView = registry.view<SceneNode, Transform, std::shared_ptr<Mesh>, std::shared_ptr<Texture>>();
 	drawablesView.each(
 		[&](SceneNode& sceneNode, Transform& transform, std::shared_ptr<Mesh>& mesh_ptr, std::shared_ptr<Texture>& texture) {
@@ -91,6 +133,28 @@ std::vector<RenderSystem::EntityWithMatrix> RenderSystem::getDrawableEntitiesInO
 // setup phase, from a mesh material that indicates what shader and textures should be used to render it
 void RenderSystem::DrawScene(const glm::vec3& cameraPosition, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, ShaderProgram& shaderProgram, int screenWidth, int screenHeight)
 {
+	struct ShaderLightData {
+		glm::vec3 position;
+		glm::vec3 ambient;
+		glm::vec3 diffuse;
+		glm::vec3 specular;
+	};
+	std::vector<ShaderLightData> lightsForShader;
+	auto lightView = registry.view<::Light, Transform>();
+	for (auto entity : lightView) {
+		const auto& lightComponent = lightView.get<::Light>(entity);
+		const auto& transformComponent = lightView.get<Transform>(entity);
+
+		ShaderLightData sld;
+		sld.position = transformComponent.position;
+		sld.ambient = lightComponent.ambient;
+		sld.diffuse = lightComponent.diffuse;
+		sld.specular = lightComponent.specular;
+
+		lightsForShader.push_back(sld);
+	}
+	shaderProgram.setLights(lightsForShader, "lights");
+
 	// for now we simply draw all meshes
 	shaderProgram.setVec3(cameraPosition, "cameraPosition");
 	shaderProgram.setMatrix4x4(viewMatrix, "view");
