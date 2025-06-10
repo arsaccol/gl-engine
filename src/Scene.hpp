@@ -74,30 +74,6 @@ void Scene::setup()
 
 	setupSceneGraphRoot();
 
-	// Create lights using the factory
-	// Light 1
-	factory.createLight(
-		registry,
-		rootNodeEntity, // Parent
-		{ // Light Properties (using designated initializers for Light struct)
-			.ambient = glm::vec3(0.2f, 0.2f, 0.2f),
-			.diffuse = glm::vec3(0.8f, 0.8f, 0.8f), // White light
-			.specular = glm::vec3(1.0f, 1.0f, 1.0f)
-		},
-		glm::vec3(5.0f, 5.0f, 5.0f) // Position
-	);
-
-	// Light 2
-	factory.createLight(
-		registry,
-		rootNodeEntity, // Parent
-		{ // Light Properties
-			.ambient = glm::vec3(0.1f, 0.1f, 0.1f),
-			.diffuse = glm::vec3(0.5f, 0.2f, 0.2f), // Reddish light
-			.specular = glm::vec3(0.7f, 0.7f, 0.7f)
-		},
-		glm::vec3(-5.0f, 3.0f, -5.0f) // Position
-	);
 
 	setupPlayer();
 
@@ -112,8 +88,41 @@ void Scene::setup()
 
 	for (int i = 0; i < 50; ++i)
 	{
-		entt::entity cubeID = factory.BlenderCube(registry, humanID);
+		entt::entity cubeID = factory.BlenderCube(registry, i % 2? humanID : rootNodeEntity);
 	}
+
+	factory.createLight(
+		registry,
+		rootNodeEntity,
+		{ 
+			.diffuse = glm::vec3(0.f, 0.f, 1.f), //blue
+			.ambient = glm::vec3(0.2f, 0.2f, 0.2f),
+			.specular = glm::vec3(1.0f, 1.0f, 1.0f)
+		},
+		glm::vec3(15.0f, 0.0f, 15.0f) // Position
+	);
+
+	factory.createLight(
+		registry,
+		rootNodeEntity,
+		{
+			.diffuse = glm::vec3(1.f, 0.f, 0.f), // red
+			.ambient = glm::vec3(0.1f, 0.1f, 0.1f),
+			.specular = glm::vec3(0.7f, 0.7f, 0.7f)
+		},
+		glm::vec3(-15.0f, 0.0f, -15.0f) // Position
+	);
+
+	factory.createLight(
+		registry,
+		rootNodeEntity,
+		{
+			.diffuse = glm::vec3(0.f, 1.f, 0.f), // green
+			.ambient = glm::vec3(0.1f, 0.1f, 0.1f),
+			.specular = glm::vec3(0.7f, 0.7f, 0.7f)
+		},
+		glm::vec3(15.0f, 0.0f, -15.f) // Position
+	);
 }
 
 entt::registry& Scene::getRegistry()
