@@ -12,6 +12,8 @@ out vec4 fragmentColor;
 
 uniform sampler2D ourTexture;
 
+#define MAX_LIGHTS 10
+
 struct Light
 {
 	vec3 position;
@@ -28,6 +30,9 @@ struct Material
 	vec3 emission; // should be sampler2d?
 	float shininess;
 };
+
+uniform Light lights[MAX_LIGHTS];
+uniform int lightsCount;
 
 vec3 attenuate(vec3 litColor, vec3 fragmentPosition,  Light light)
 {
@@ -60,12 +65,13 @@ vec3 enlightenFragment(Light light, Material material)
 
 void main()
 {
-	Light redLight = Light( vec3(-5, 3, -5), vec3(1, 0.5, 0.5), vec3(0.05, 0.05, 0.05), vec3(1, 1, 1) );
-	Light blueLight = Light( vec3(5, -3, 5), vec3(0.5, 0.5, 1), vec3(0.05, 0.05, 0.05), vec3(1, 1, 1) );
 	Material material = Material(texture(ourTexture, textureCoord).rgb, vec3(0), vec3(0), 32);
+	vec3 totalColor = vec3(0.0);
 
-	vec4 color = vec4(enlightenFragment(redLight, material), 1);
-	color += vec4(enlightenFragment(blueLight, material), 1);
+	for (int i = 0; i < lightsCount; ++i)
+	{
+		totalColor += enlightenFragment(lights[i], material);
+	}
 
-	fragmentColor = color;
+	fragmentColor = vec4(totalColor, 1.0);
 }

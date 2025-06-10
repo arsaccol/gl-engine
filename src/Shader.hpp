@@ -12,6 +12,7 @@
 #include "Helper.hpp"
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp> // for glm::value_ptr
+#include "Light.hpp" // Light struct might be used by shader data structs passed here
 
 #include <iostream>
 
@@ -151,7 +152,42 @@ public:
 	void setVec3(const glm::vec3& vector, const char* vectorNameInShader)
 	{
 		glUseProgram(shaderProgramId);
-		glUniform3fv(shaderProgramId, 1, glm::value_ptr(vector));
+		glUniform3fv(glGetUniformLocation(shaderProgramId, vectorNameInShader), 1, glm::value_ptr(vector));
+		glUseProgram(0);
+	}
+
+	void setInt(int value, const char* intNameInShader)
+	{
+		glUseProgram(shaderProgramId);
+		glUniform1i(glGetUniformLocation(shaderProgramId, intNameInShader), value);
+		glUseProgram(0);
+	}
+
+	template<typename LightType>
+	void setLights(const std::vector<LightType>& lights, const std::string& arrayNameInShader)
+	{
+		glUseProgram(shaderProgramId);
+
+		std::string numLightsName = arrayNameInShader + "Count";
+		glUniform1i(glGetUniformLocation(shaderProgramId, numLightsName.c_str()), static_cast<int>(lights.size()));
+
+		for (size_t i = 0; i < lights.size(); ++i)
+		{
+			std::string uniformName;
+
+			uniformName = arrayNameInShader + "[" + std::to_string(i) + "].position";
+			glUniform3fv(glGetUniformLocation(shaderProgramId, uniformName.c_str()), 1, glm::value_ptr(lights[i].position));
+
+			uniformName = arrayNameInShader + "[" + std::to_string(i) + "].diffuse";
+			glUniform3fv(glGetUniformLocation(shaderProgramId, uniformName.c_str()), 1, glm::value_ptr(lights[i].diffuse));
+
+			uniformName = arrayNameInShader + "[" + std::to_string(i) + "].ambient";
+			glUniform3fv(glGetUniformLocation(shaderProgramId, uniformName.c_str()), 1, glm::value_ptr(lights[i].ambient));
+
+			uniformName = arrayNameInShader + "[" + std::to_string(i) + "].specular";
+			glUniform3fv(glGetUniformLocation(shaderProgramId, uniformName.c_str()), 1, glm::value_ptr(lights[i].specular));
+		}
+
 		glUseProgram(0);
 	}
 

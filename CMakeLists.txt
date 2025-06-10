@@ -6,6 +6,9 @@ message("Project name: ${PROJ_NAME}")
 message("vcpkg root: ${VCPKG_ROOT}")
 
 project(${PROJ_NAME} CXX)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_path(STB_INCLUDE_DIRS "stb_image.h")
 find_package(assimp CONFIG REQUIRED)
